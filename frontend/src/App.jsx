@@ -1,8 +1,8 @@
 import React, { useState } from 'react'; // { useState } 를 추가!
 import './App.css';
-import Login from './components/Login.jsx';
-import Main from './components/Main.jsx';
-import MyPage from './components/MyPage.jsx';
+import Login from './pages/Login.jsx';
+import Main from './pages/Main.jsx';
+import MyPage from './pages/MyPage.jsx';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('login');
