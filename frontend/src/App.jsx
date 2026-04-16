@@ -3,9 +3,11 @@ import './App.css';
 import Login from './pages/Login.jsx';
 import Main from './pages/Main.jsx';
 import MyPage from './pages/MyPage.jsx';
+import SignUp from './pages/SignUp.jsx';
+import SignUpForm from './pages/SignUpForm.jsx';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('login');
+  const [currentPage, setCurrentPage] = useState('signup');
 
   const handleNavigate = (page) => {
     setCurrentPage(page);
@@ -15,6 +17,8 @@ export default function App() {
   return (
     <div className="app-container">
       {/* 상태(currentPage)에 따라 다른 컴포넌트를 보여줍니다 */}
+      {currentPage === 'signupform' && <SignUpForm onNavigate={handleNavigate} />}
+      {currentPage === 'signup' && <SignUp onNavigate={handleNavigate} />}
       {currentPage === 'login' && <Login onNavigate={handleNavigate} />}
       {currentPage === 'main' && <Main onNavigate={handleNavigate} />}
       {currentPage === 'mypage' && <MyPage onNavigate={handleNavigate} />}
