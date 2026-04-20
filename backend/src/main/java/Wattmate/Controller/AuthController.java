@@ -8,7 +8,7 @@ import Wattmate.DTO.LoginRequest;
 import Wattmate.DTO.LoginResponse;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class AuthController {
 
     private final AuthService authService;
@@ -27,6 +27,9 @@ public class AuthController {
     
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
-        return authService.login(request);
+
+        String token = authService.login(request);
+
+        return new LoginResponse(token, "로그인 성공");
     }
 }
