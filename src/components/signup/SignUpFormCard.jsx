@@ -107,10 +107,6 @@ export default function SignUpFormCard({
             onChange={onChange}
           >
             <option value="">인증 방식 선택</option>
-            <option value="증빙서류 업로드">증빙서류 업로드</option>
-            <option value="주민등록등본 인증">주민등록등본 인증</option>
-            <option value="공공 마이데이터 연동">공공 마이데이터 연동</option>
-            <option value="한전 고객정보 연동">한전 고객정보 연동</option>
           </select>
         </FormField>
 
