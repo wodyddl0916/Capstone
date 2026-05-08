@@ -1,38 +1,17 @@
-<<<<<<< HEAD
 services:
   frontend:
-    build: .
-    ports:
-      - "5173:5173"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    stdin_open: true
-    tty: true
-=======
-<<<<<<< HEAD
-services:
-  frontend:
-    build: .
-    ports:
-      - "5173:5173"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    stdin_open: true
-    tty: true
-=======
-services:
-  app:
+    container_name: watt-mate-frontend
     image: node:22-alpine
+    working_dir: /app
     volumes:
       - .:/app
-      - /app/node_modules # 중요: 도커 전용 패키지 저장 공간 생성
-    working_dir: /app
+      - /app/node_modules
     ports:
       - "5173:5173"
-    # 실행 전 npm install을 먼저 수행하도록 명령어 변경
-    # docker-compose.yml 방식
-    command: sh -c "npm install && npm run dev -- --host"
->>>>>>> 734cdd9 (docker compose upload)
->>>>>>> b4d3830969fa17d2913c8ec95249291cdb1d25fd
+    stdin_open: true
+    tty: true
+    # 1. git 설치 2. 패키지 설치 3. Vite 서버 실행 (0.0.0.0으로 강제 개방)
+    command: >
+      sh -c "apk add --no-cache git && 
+             npm install && 
+             npm run dev -- --host 0.0.0.0"

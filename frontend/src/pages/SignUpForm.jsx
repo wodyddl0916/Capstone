@@ -1,54 +1,38 @@
 import React, { useState } from 'react';
+import api from '../api/axios'; 
 import '../css/SignUpForm.css';
 import SignUpFormIntro from '../components/signup/SignUpFormIntro';
 import SignUpFormCard from '../components/signup/SignUpFormCard';
 
 export default function SignUpForm({ onNavigate }) {
-  // 1. 폼 상태 관리 (원래 UI 그대로 유지하기 위해 상태도 전부 남겨둡니다)
+  // 1. 폼 상태 관리
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    username: '',
+    name: '',           
+    email: '',          
+    username: '',       // UI에서 입력받는 '아이디'
     password: '',
     confirmPassword: '',
-    region: '',
-    houseType: '',
-    houseVerifyMethod: '',
-    houseProofFile: null,
+    region: '',         
+    houseType: '',      
     agree: false,
   });
 
-  // 입력값 변경 핸들러 (그대로 유지)
+  // 입력값 변경 핸들러
   const handleChange = (e) => {
-    const { name, value, type, checked, files } = e.target;
+    const { name, value, type, checked } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]:
-        type === 'checkbox'
-          ? checked
-          : type === 'file'
-          ? files[0]
-          : value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
-  // 2. 임시 중복 확인 (나중에 백엔드 API 만들면 연결)
-  const handleCheckDuplicate = async () => {
-    if (!form.username.trim()) {
-      alert('아이디를 입력해주세요.');
-      return;
-    }
-    // 현재는 API가 없으니 무조건 통과하는 걸로 임시 처리
-    alert('사용 가능한 아이디입니다. (임시 통과)');
-  };
-
-  // 3. 회원가입 제출 (🌟 여기만 바뀝니다!)
+  // 2. 회원가입 제출 로직
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 필수 항목만 검사 (나머지는 화면에 있어도 안 적어도 넘어가게)
+    // 필수 검증: 아이디, 비밀번호, 약관 동의만 확인
     if (!form.username || !form.password) {
-      alert('아이디와 비밀번호를 입력하세요');
+      alert('아이디와 비밀번호는 필수 입력 항목입니다.');
       return;
     }
     if (form.password !== form.confirmPassword) {
@@ -61,47 +45,58 @@ export default function SignUpForm({ onNavigate }) {
     }
 
     try {
-      // 🌟 핵심: 화면에서 뭘 입력했든 상관없이 백엔드에는 ID와 PW만 JSON으로 보냅니다.
-      const response = await fetch('http://43.201.202.195:8080/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: form.username,       // 백엔드가 기다리는 'id'
-          password: form.password, // 백엔드가 기다리는 'password'
-        }),
-      });
+      // 🌟 사용자가 입력하지 않은 항목에 대한 '자동 채우기' 로직
+      const signupData = {
+        // 백엔드 username(이메일 컬럼)이 비어있으면 '아이디@wattmate.com'으로 생성
+        username: form.email || `${form.username}@wattmate.com`, 
+        
+        password: form.password,
+        
+        // 이름이 비어있으면 입력한 '아이디'를 닉네임으로 사용
+        nickname: form.name || form.username, 
+        
+        // 가구 유형이 비어있으면 기본값 '1인 가구'로 설정 (백엔드 Enum 매핑용)
+        houseType: form.houseType || '1인 가구' 
+      };
 
-      if (response.ok) {
-        alert('회원가입이 완료되었습니다!');
+      // 404 에러 방지를 위해 경로를 /api/signup 으로 수정했습니다.
+      const response = await api.post('/api/signup', signupData);
+
+      if (response.status === 200 || response.status === 201) {
+        alert(`${signupData.nickname}님, 와트메이트에 오신 것을 환영합니다!`);
         onNavigate('login');
-      } else {
-        alert('가입 실패: 서버 오류');
       }
     } catch (error) {
-      console.error('회원가입 에러:', error);
-      alert('백엔드 서버와 통신할 수 없습니다.');
+      console.error('회원가입 에러 상세:', error);
+      
+      // 서버에서 보낸 에러 메시지가 있으면 출력, 없으면 기본 메시지 출력
+      const message = error.response?.data?.message || '회원가입 실패: 서버 연결 상태를 확인하세요.';
+      alert(message);
     }
   };
 
   return (
     <div className="signupform-page">
+      {/* 배경 디자인 요소 */}
+      <div className="signupform-overlay"></div>
+      
       <div className="signupform-container">
-        <SignUpFormIntro />
-        <SignUpFormCard
-          form={form}
-          onChange={handleChange}
-          onCheckDuplicate={handleCheckDuplicate}
-          onSubmit={handleSubmit}
-          onNavigate={onNavigate}
-          onChangeRegion={(region) => {
-            setForm((prev) => ({ ...prev, region }));
-          }}
-          onChangeLocation={({ lat, lon, region }) => {
-            setForm((prev) => ({ ...prev, lat, lon, region }));
-          }}
-        />
+        {/* 왼쪽: 서비스 소개 섹션 */}
+        <div className="signupform-left">
+          <SignUpFormIntro />
+        </div>
+
+        {/* 오른쪽: 입력 카드 섹션 */}
+        <div className="signupform-right">
+          <SignUpFormCard
+            form={form}
+            onChange={handleChange}
+            onSubmit={handleSubmit}
+            onNavigate={onNavigate}
+            onChangeRegion={(region) => setForm(prev => ({ ...prev, region }))}
+            onChangeLocation={({ region }) => setForm(prev => ({ ...prev, region }))}
+          />
+        </div>
       </div>
     </div>
   );
