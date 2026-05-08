@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../css/Login.css';
 
 // 🌟 현재 로컬에서 백엔드 테스트 중이므로 주소를 변경합니다.
-const API_BASE = "http://localhost:8080";
+const API_BASE = "http://43.201.202.195:8080";
 
 const Login = ({ onNavigate }) => {
   const [id, setId] = useState('');
