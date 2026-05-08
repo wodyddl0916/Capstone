@@ -62,7 +62,7 @@ export default function SignUpForm({ onNavigate }) {
 
     try {
       // 🌟 핵심: 화면에서 뭘 입력했든 상관없이 백엔드에는 ID와 PW만 JSON으로 보냅니다.
-      const response = await fetch('http://localhost:8080/api/signup', {
+      const response = await fetch('http://43.201.202.195:8080/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
