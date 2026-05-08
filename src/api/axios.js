@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // 1. 기본 설정
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api', // 백엔드 주소
+  baseURL: 'http://43.201.202.195:8080/api', // 백엔드 주소
   headers: {
     'Content-Type': 'application/json',
   },
@@ -30,7 +30,7 @@ api.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem('refreshToken');
         // 백엔드에 토큰 재발급 요청
-        const res = await axios.post('http://localhost:8080/api/refresh', { refreshToken });
+        const res = await axios.post('http://43.201.202.195:8080/api/refresh', { refreshToken });
         
         const newAccessToken = res.data.accessToken;
         localStorage.setItem('accessToken', newAccessToken); // 새 토큰 저장
