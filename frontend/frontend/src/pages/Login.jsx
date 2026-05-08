@@ -1,8 +1,59 @@
+<<<<<<< HEAD
+// 1. 로그인
+import React, { useState } from 'react';
+
+const Login = ({ onNavigate }) => {
+  const [id, setId] = useState('');
+  const [pw, setPw] = useState('');
+
+  const handleLogin = () => {
+    if (id === 'user' && pw === '1234') {
+      alert('관리자님 환영합니다!');
+      onNavigate('main');
+    } else {
+      alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+    }
+  };
+
+  return (
+    <div className="login-page">
+      <div className="login-container">
+        <div className="header-section">
+          <div className="subtitle">에너지가 가치가 되는 순간</div>
+          <div className="title-wrapper">
+            <img src="favicon.svg" className="logo-icon" alt="와트메이트 로고" />
+            <h1 className="main-title">와트메이트</h1>
+          </div>
+        </div>
+
+        <div className="form-section">
+          <input
+            type="text"
+            className="input-field"
+            placeholder="아이디"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+          />
+          <input
+            type="password"
+            className="input-field"
+            placeholder="비밀번호"
+            value={pw}
+            onChange={(e) => setPw(e.target.value)}
+          />
+          <button onClick={handleLogin} className="login-button">
+            와트메이트 로그인
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
+=======
 import React, { useState } from 'react';
 import '../css/Login.css';
-
-// 🌟 현재 로컬에서 백엔드 테스트 중이므로 주소를 변경합니다.
-const API_BASE = "http://localhost:8080";
 
 const Login = ({ onNavigate }) => {
   const [id, setId] = useState('');
@@ -18,13 +69,14 @@ const Login = ({ onNavigate }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/api/login`, {
+      // 1. 친구가 할당한 고정 IP 서버로 로그인 요청
+      const response = await fetch('http://localhost:8080/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: id,          // 🌟 백엔드 DTO에 맞춰서 username 대신 id로 보냅니다.
+          username: id,
           password: pw,
         }),
       });
@@ -33,18 +85,14 @@ const Login = ({ onNavigate }) => {
 
       // 2. 결과 처리
       if (response.ok) {
-        // 🌟 핵심: 백엔드에서 받은 두 개의 토큰을 브라우저 저장소에 보관합니다.
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        
-        alert(`로그인 성공! 환영합니다.`);
+        alert(`${data.name || '사용자'}님 환영합니다!`);
         onNavigate('main'); // 로그인 성공 시 메인 화면으로 이동
       } else {
         alert(data.message || '아이디 또는 비밀번호가 일치하지 않습니다.');
       }
     } catch (error) {
       console.error('로그인 에러:', error);
-      alert('서버와 연결할 수 없습니다. 백엔드 서버가 켜져 있는지 확인하세요.');
+      alert('서버와 연결할 수 없습니다. 백엔드 서버가 켜져 있는지, 혹은 CORS 설정이 되어 있는지 확인하세요.');
     } finally {
       setIsLoading(false);
     }
@@ -103,3 +151,4 @@ const Login = ({ onNavigate }) => {
 };
 
 export default Login;
+>>>>>>> b4d3830969fa17d2913c8ec95249291cdb1d25fd
