@@ -5,10 +5,18 @@ const Home = () => {
   const [activeBanner, setActiveBanner] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // 📍 [추가된 부분 1] 사용자 요약 정보(실시간 전력, 요금, 리워드)를 담을 상태(State)
+  const [summaryData, setSummaryData] = useState({
+    power: 0,
+    cost: 0,
+    reward: 0
+  });
+
   // ⚠️ 발급받은 네이버 API 키를 여기에 입력하세요
   const CLIENT_ID = 'e6iY6B8jHFd4FmmWQp3H'; 
   const CLIENT_SECRET = 'rSLoWWuBQx';
 
+  // 뉴스 배너를 가져오는 useEffect
   useEffect(() => {
     const fetchEnergyNews = async () => {
       try {
@@ -26,17 +34,15 @@ const Home = () => {
         
         const data = await response.json();
 
-        // 📍 [추가된 부분 1] 배경으로 쓸 고화질 에너지 이미지 (Unsplash 무료 이미지)
         const bgImages = [
-          'https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=1920&auto=format&fit=crop', // 풍력 발전
-          'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1920&auto=format&fit=crop', // 태양광
-          'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=1920&auto=format&fit=crop'  // 친환경 숲
+          'https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=1920&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1920&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=1920&auto=format&fit=crop'
         ];
 
         const newsBanners = data.items.map((item, index) => ({
           title: "TODAY ENERGY NEWS",
           subtitle: item.title.replace(/(<([^>]+)>|&quot;|&apos;|&amp;)/gi, ""), 
-          // bgColor 대신 이미지 URL을 넣습니다.
           bgImage: bgImages[index % bgImages.length], 
           link: item.link
         }));
@@ -45,7 +51,6 @@ const Home = () => {
         setLoading(false);
       } catch (error) {
         console.error("뉴스 로드 실패:", error);
-        // 에러 시 보여줄 기본 배너 (여기에도 이미지를 넣었습니다)
         setBanners([
           { 
             title: "ENERGY MATE", 
@@ -65,6 +70,31 @@ const Home = () => {
     fetchEnergyNews();
   }, []);
 
+  // 📍 [추가된 부분 2] 백엔드에서 사용자 요약 정보(전력, 요금 등)를 가져오는 useEffect
+  useEffect(() => {
+    const fetchSummaryData = async () => {
+      try {
+        // 실제 프로젝트에서는 아래처럼 백엔드 API를 호출합니다.
+        // const response = await fetch('/api/user/energy-summary');
+        // const data = await response.json();
+
+        // 임시로 백엔드에서 받아왔다고 가정한 실제 사용자 데이터 (Mock Data)
+        const mockData = {
+          power: 12.34, // 12.34 kWh
+          cost: 4560,   // 4,560 원
+          reward: 1500  // 1,500 P
+        };
+
+        setSummaryData(mockData);
+      } catch (error) {
+        console.error("사용자 데이터 로드 실패:", error);
+      }
+    };
+
+    fetchSummaryData();
+  }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행됨
+
+  // 슬라이드 타이머
   useEffect(() => {
     if (banners.length === 0) return;
     const timer = setInterval(() => {
@@ -82,21 +112,17 @@ const Home = () => {
           <div 
             key={index}
             className={`hero-slide ${activeBanner === index ? 'active' : ''}`}
-            // 📍 [수정된 부분 2] 단색 배경을 지우고, 이미지+어두운 필터를 한 번에 적용
             style={{ 
               background: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${banner.bgImage}) center/cover no-repeat`,
               cursor: 'pointer',
-              color: 'white', // 텍스트를 흰색으로
-              // 📍 이 부분을 추가하세요! 활성화된 슬라이드만 클릭을 허용합니다.
+              color: 'white',
               pointerEvents: activeBanner === index ? 'auto' : 'none', 
-        // 📍 추가 팁: 투명도가 아닌 z-index로 확실히 맨 위로 올릴 수도 있습니다.
-        zIndex: activeBanner === index ? 10 : 1,
-        transition: 'opacity 0.5s ease-in-out' // 부드러운 전환 효과가 있다면
+              zIndex: activeBanner === index ? 10 : 1,
+              transition: 'opacity 0.5s ease-in-out'
             }}
             onClick={() => banner.link && window.open(banner.link, '_blank')}
           >
             <div className="hero-content">
-              {/* 📍 [수정된 부분 3] 배경 이미지 위에서 글씨가 잘 보이도록 그림자 효과 추가 */}
               <h4 style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.5)', color: '#e0e0e0' }}>{banner.title}</h4>
               <h1 style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.6)', color: 'white' }}>{banner.subtitle}</h1>
               <button className="hero-btn" style={{ borderColor: 'white', color: 'white', textShadow: 'none' }}>기사 읽기</button>
@@ -107,9 +133,20 @@ const Home = () => {
       
       <div className="content-container">
         <div className="summary-section">
-          <div className="summary-box"><span>실시간 전력</span><strong>O.OO kWh</strong></div>
-          <div className="summary-box border-side"><span>예상 요금</span><strong>O,OOO 원</strong></div>
-          <div className="summary-box"><span>리워드</span><strong style={{color: '#7a9e7c'}}>O,OOO P</strong></div>
+          {/* 📍 [추가된 부분 3] 고정된 텍스트 대신 state(summaryData) 값으로 변경 */}
+          <div className="summary-box">
+            <span>실시간 전력</span>
+            <strong>{summaryData.power} kWh</strong>
+          </div>
+          <div className="summary-box border-side">
+            <span>예상 요금</span>
+            {/* toLocaleString()을 쓰면 4500이 4,500 처럼 천 단위 콤마가 붙습니다 */}
+            <strong>{summaryData.cost.toLocaleString()} 원</strong>
+          </div>
+          <div className="summary-box">
+            <span>리워드</span>
+            <strong style={{color: '#7a9e7c'}}>{summaryData.reward.toLocaleString()} P</strong>
+          </div>
         </div>
       </div>
     </>

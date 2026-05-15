@@ -310,8 +310,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  color: #aaa;
-  font-size: 16px;
-  border-radius: 8px;
+  color: #999;
+  margin-top: 25px;
+  font-size: 24px;
+}
+
+.ai-tip {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 2rem;
+  border-radius: 20px;
+  margin-top: 2rem;
+  font-size: 22px;
+  color: #166534;
+  line-height: 1.6;
+}
+
+.ai-tip strong {
+  font-weight: 800;
+  font-size: 24px;
 }
