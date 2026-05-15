@@ -5,15 +5,14 @@ import SignUpFormIntro from '../components/signup/SignUpFormIntro';
 import SignUpFormCard from '../components/signup/SignUpFormCard';
 
 export default function SignUpForm({ onNavigate }) {
-  // 1. 폼 상태 관리
+  // 1. 폼 상태 관리: Spring Boot DTO 필드명에 맞춤
   const [form, setForm] = useState({
-    name: '',           
-    email: '',          
-    username: '',       // UI에서 입력받는 '아이디'
+    email: '',          // 로그인용 이메일
     password: '',
     confirmPassword: '',
-    region: '',         
-    houseType: '',      
+    nickname: '',       // 사용자 이름
+    kepcoCustNo: '',    // 한전 고객번호 (필수 10자리)
+    householdCount: 1,  // 가구원 수 (숫자)
     agree: false,
   });
 
@@ -30,9 +29,9 @@ export default function SignUpForm({ onNavigate }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 필수 검증: 이메일주소, 비밀번호, 약관 동의만 확인
-    if (!form.email || !form.password) {
-      alert('이메일주소와 비밀번호는 필수 입력 항목입니다.');
+    // 필수 검증
+    if (!form.email || !form.password || !form.kepcoCustNo) {
+      alert('이메일, 비밀번호, 한전 고객번호는 필수 항목입니다.');
       return;
     }
     if (form.password !== form.confirmPassword) {
@@ -45,59 +44,42 @@ export default function SignUpForm({ onNavigate }) {
     }
 
     try {
-      // 🌟 DB에 저장할 데이터 묶음 (거주 지역 포함 완료!)
+      // Spring Boot SignupRequest DTO 구조와 1:1 매칭
       const signupData = {
-        // 백엔드 username(이메일 컬럼)이 비어있으면 '아이디@wattmate.com'으로 생성
-        username: form.email || `${form.username}@wattmate.com`, 
-        
+        email: form.email,
         password: form.password,
-        
-        // 이름이 비어있으면 입력한 '아이디'를 닉네임으로 사용
-        nickname: form.name || form.username, 
-        
-        // 가구 유형이 비어있으면 기본값 '1인 가구'로 설정 (백엔드 Enum 매핑용)
-        houseType: form.houseType || '1인 가구',
-        
-        // 📍 프론트엔드 상태에 저장된 거주 지역 정보를 백엔드로 전송하도록 추가
-        region: form.region 
+        nickname: form.nickname || form.email.split('@')[0],
+        kepcoCustNo: form.kepcoCustNo,
+        householdCount: parseInt(form.householdCount), // 반드시 정수로 변환
       };
 
-      // 404 에러 방지를 위해 경로를 /api/signup 으로 수정했습니다.
       const response = await api.post('/api/signup', signupData);
 
       if (response.status === 200 || response.status === 201) {
-        alert(`${signupData.nickname}님, 와트메이트에 오신 것을 환영합니다!`);
+        alert(`${signupData.nickname}님, 와트메이트 가입을 환영합니다!`);
         onNavigate('login');
       }
     } catch (error) {
-      console.error('회원가입 에러 상세:', error);
-      
-      // 서버에서 보낸 에러 메시지가 있으면 출력, 없으면 기본 메시지 출력
-      const message = error.response?.data?.message || '회원가입 실패: 서버 연결 상태를 확인하세요.';
+      console.error('회원가입 에러:', error);
+      const message = error.response?.data?.message || '서버 연결에 실패했습니다.';
       alert(message);
     }
   };
 
   return (
     <div className="signupform-page">
-      {/* 배경 디자인 요소 */}
       <div className="signupform-overlay"></div>
-      
       <div className="signupform-container">
-        {/* 왼쪽: 서비스 소개 섹션 */}
         <div className="signupform-left">
           <SignUpFormIntro />
         </div>
-
-        {/* 오른쪽: 입력 카드 섹션 */}
         <div className="signupform-right">
+          {/* 자식 컴포넌트에 상태와 핸들러 전달 */}
           <SignUpFormCard
             form={form}
             onChange={handleChange}
             onSubmit={handleSubmit}
             onNavigate={onNavigate}
-            onChangeRegion={(region) => setForm(prev => ({ ...prev, region }))}
-            onChangeLocation={({ region }) => setForm(prev => ({ ...prev, region }))}
           />
         </div>
       </div>
