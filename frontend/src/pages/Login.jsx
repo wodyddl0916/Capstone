@@ -66,7 +66,7 @@ const Login = ({ onNavigate }) => {
           <input
             type="text"
             className="input-field"
-            placeholder="아이디"
+            placeholder="아이디(이메일주소)"
             value={id}
             onChange={(e) => setId(e.target.value)}
             disabled={isLoading}

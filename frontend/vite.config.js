@@ -10,7 +10,15 @@ export default defineConfig({
     strictPort: true, // 포트가 사용 중일 때 자동으로 다른 포트로 바뀌는 것 방지
     watch: {
       usePolling: true, // Windows/Docker 환경에서 파일 변경 감지 활성화
+    },
+    // --- 네이버 API 프록시 설정 추가 ---
+    proxy: {
+      '/v1': {
+        target: 'https://openapi.naver.com',
+        changeOrigin: true,
+      }
     }
+    // --------------------------------
   },
   // 만약 사이트 주소가 localhost:5173/watt-mate 라면 아래 설정을 켭니다.
   // base: '/watt-mate/', 

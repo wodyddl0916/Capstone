@@ -30,9 +30,9 @@ export default function SignUpForm({ onNavigate }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 필수 검증: 아이디, 비밀번호, 약관 동의만 확인
-    if (!form.username || !form.password) {
-      alert('아이디와 비밀번호는 필수 입력 항목입니다.');
+    // 필수 검증: 이메일주소, 비밀번호, 약관 동의만 확인
+    if (!form.email || !form.password) {
+      alert('이메일주소와 비밀번호는 필수 입력 항목입니다.');
       return;
     }
     if (form.password !== form.confirmPassword) {
@@ -45,7 +45,7 @@ export default function SignUpForm({ onNavigate }) {
     }
 
     try {
-      // 🌟 사용자가 입력하지 않은 항목에 대한 '자동 채우기' 로직
+      // 🌟 DB에 저장할 데이터 묶음 (거주 지역 포함 완료!)
       const signupData = {
         // 백엔드 username(이메일 컬럼)이 비어있으면 '아이디@wattmate.com'으로 생성
         username: form.email || `${form.username}@wattmate.com`, 
@@ -56,7 +56,10 @@ export default function SignUpForm({ onNavigate }) {
         nickname: form.name || form.username, 
         
         // 가구 유형이 비어있으면 기본값 '1인 가구'로 설정 (백엔드 Enum 매핑용)
-        houseType: form.houseType || '1인 가구' 
+        houseType: form.houseType || '1인 가구',
+        
+        // 📍 프론트엔드 상태에 저장된 거주 지역 정보를 백엔드로 전송하도록 추가
+        region: form.region 
       };
 
       // 404 에러 방지를 위해 경로를 /api/signup 으로 수정했습니다.

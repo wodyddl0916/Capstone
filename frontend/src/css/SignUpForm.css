@@ -40,7 +40,6 @@
 
 .signupform-left {
   padding: 20px 10px;
-  margin-top: -280px;
 }
 
 .signupform-badge {
@@ -312,34 +311,6 @@
   color: #ffffff;
 }
 
-.signupform-group input[type="file"] {
-  height: auto;
-  padding: 14px 16px;
-  background: #fcfffd;
-  border: 1px dashed #b7d9c4;
-  border-radius: 16px;
-  cursor: pointer;
-  line-height: 1.4;
-}
-
-.signupform-group input[type="file"]::file-selector-button {
-  margin-right: 12px;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #22c55e, #12b76a);
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.signupform-group input[type="file"]:focus {
-  border-color: #46c97a;
-  box-shadow: 0 0 0 4px rgba(70, 201, 122, 0.12);
-  background: #ffffff;
-}
-
 .signupform-agree {
   display: flex;
   align-items: center;
@@ -484,52 +455,4 @@
   .signupform-region-item {
     font-size: 16px;
   }
-}
-
-.signupform-region-box {
-  margin-top: 18px;
-  padding: 18px;
-  border: 1px solid #d9e8df;
-  border-radius: 18px;
-  background: #ffffff;
-}
-
-.signupform-region-title {
-  margin: 0 0 14px;
-  color: #7a8791;
-  font-size: 15px;
-  font-weight: 800;
-}
-
-.signupform-region-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 280px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.signupform-region-item {
-  width: 100%;
-  padding: 14px 12px;
-  border: none;
-  border-radius: 12px;
-  background: #f7faf8;
-  color: #1f2d25;
-  font-size: 17px;
-  font-weight: 800;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.signupform-region-item:hover {
-  background: #e9fff2;
-  transform: translateX(2px);
-}
-
-.signupform-region-item.active {
-  background: #22c55e;
-  color: #ffffff;
 }

@@ -2,7 +2,6 @@ import React, { useState } from 'react'; // { useState } 를 추가!
 import './App.css';
 import Login from './pages/Login.jsx';
 import Main from './pages/Main.jsx';
-import MyPage from './pages/MyPage.jsx';
 import SignUp from './pages/SignUp.jsx';
 import SignUpForm from './pages/SignUpForm.jsx';
 
@@ -21,7 +20,6 @@ export default function App() {
       {currentPage === 'signup' && <SignUp onNavigate={handleNavigate} />}
       {currentPage === 'login' && <Login onNavigate={handleNavigate} />}
       {currentPage === 'main' && <Main onNavigate={handleNavigate} />}
-      {currentPage === 'mypage' && <MyPage onNavigate={handleNavigate} />}
     </div>
   );
 }

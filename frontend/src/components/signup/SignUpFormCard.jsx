@@ -5,7 +5,6 @@ import LocationSelector from './LocationSelector';
 export default function SignUpFormCard({
   form,
   onChange,
-  onCheckDuplicate,
   onSubmit,
   onNavigate,
   onChangeRegion,
@@ -41,25 +40,6 @@ export default function SignUpFormCard({
           full
         />
 
-        <FormField label="아이디" full>
-          <div className="signupform-inline-field">
-            <input
-              type="text"
-              name="username"
-              placeholder="아이디를 입력하세요"
-              value={form.username}
-              onChange={onChange}
-            />
-            <button
-              type="button"
-              className="signupform-check-btn"
-              onClick={onCheckDuplicate}
-            >
-              중복확인
-            </button>
-          </div>
-        </FormField>
-
         <FormField
           label="비밀번호"
           name="password"
@@ -85,39 +65,6 @@ export default function SignUpFormCard({
             onChangeLocation={onChangeLocation}
           />
         </FormField>
-
-        <FormField label="가구 유형">
-          <select
-            name="houseType"
-            value={form.houseType}
-            onChange={onChange}
-          >
-            <option value="">가구 유형 선택</option>
-            <option value="1인 가구">1인 가구</option>
-            <option value="2인 가구">2인 가구</option>
-            <option value="3인~4인 가구">3인~4인 가구</option>
-            <option value="5인 이상 가구">5인 이상 가구</option>
-          </select>
-        </FormField>
-
-        <FormField label="가구 정보 인증 방식">
-          <select
-            name="houseVerifyMethod"
-            value={form.houseVerifyMethod}
-            onChange={onChange}
-          >
-            <option value="">인증 방식 선택</option>
-          </select>
-        </FormField>
-
-        <FormField label="가구 유형 증빙자료" full>
-          <input
-            type="file"
-            name="houseProofFile"
-            accept=".jpg,.jpeg,.png,.pdf"
-            onChange={onChange}
-          />
-        </FormField>
       </div>
 
       <label className="signupform-agree">
@@ -138,7 +85,6 @@ export default function SignUpFormCard({
         >
           뒤로가기
         </button>
-
         <button type="submit" className="signupform-submit-btn">
           가입하기
         </button>
