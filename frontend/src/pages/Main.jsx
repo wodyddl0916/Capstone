@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import Home from "../components/Main/Home";
+
 import ElectricStats from '../components/Main/ElectricStats';
+import HourlyStats from '../components/Main/ElectricStats/HourlyStats';
+import DailyStats from '../components/Main/ElectricStats/DailyStats';
+import MonthlyStats from '../components/Main/ElectricStats/MonthlyStats';
+
 import DataUpload from "../components/Main/MyPage/DataUpload";
 import GoalSetting from "../components/Main/MyPage/GoalSetting";
 import UserInfo from "../components/Main/MyPage/UserInfo";
@@ -24,11 +29,15 @@ const Main = ({ onNavigate }) => {
     { title: '마이페이지', items: ['회원정보', '목표 설정', '전력 데이터 업로드'] }
   ];
 
+  // 전기사용량 하위 메뉴에 맞게 개별 컴포넌트 렌더링
   const renderContent = () => {
     switch (activeMenu) {
       case 'HOME': return <Home />;
-      case '전기사용량': case '시간대별': case '일별': case '월별': case '연도별':
-        return <ElectricStats />;
+      case '전기사용량': 
+      case '시간대별': return <HourlyStats />;
+      case '일별': return <DailyStats />;
+      case '월별': return <MonthlyStats />;
+      case '연도별': return <ElectricStats />; // 연도별은 임시로 ElectricStats 렌더링
       case '리그통계': case '지역 리그': return <RegionalLeague />;
       case '절약 순위': return <SavingRank />;
       case '리워드 랭킹': return <RewardRanking />;
@@ -36,6 +45,15 @@ const Main = ({ onNavigate }) => {
       case '목표 설정': return <GoalSetting />;
       case '전력 데이터 업로드': return <DataUpload />;
       default: return <Home />;
+    }
+  };
+
+  // 메뉴 클릭 시 특정 메뉴로 리다이렉트하는 핸들러
+  const handleMenuClick = (menuName) => {
+    if (menuName === '전기사용량') {
+      setActiveMenu('시간대별'); // 전기사용량 클릭 시 시간대별로 기본 설정
+    } else {
+      setActiveMenu(menuName);
     }
   };
 
@@ -64,7 +82,7 @@ const Main = ({ onNavigate }) => {
                 <div 
                   key={menu}
                   className={`menu-item ${isMainActive ? 'active' : ''}`}
-                  onClick={() => setActiveMenu(menu)}
+                  onClick={() => handleMenuClick(menu)}
                 >
                   {menu}
                 </div>
@@ -82,7 +100,7 @@ const Main = ({ onNavigate }) => {
                 return (
                   <div key={index} className={`dropdown-section ${isSectionActive ? 'active-column' : ''}`}>
                     <h4 onClick={() => {
-                      setActiveMenu(menu.title);
+                      handleMenuClick(menu.title);
                       setIsDropdownOpen(false);
                     }}>
                       {menu.title}
@@ -93,7 +111,7 @@ const Main = ({ onNavigate }) => {
                           key={idx} 
                           className={activeMenu === item ? 'active-text' : ''}
                           onClick={() => {
-                            setActiveMenu(item);
+                            handleMenuClick(item);
                             setIsDropdownOpen(false);
                           }}
                         >
