@@ -310,40 +310,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  color: #aaa;
-  font-size: 16px;
-  border-radius: 8px;
+  color: #999;
+  margin-top: 25px;
+  font-size: 24px;
 }
 
-/* RankingPage용 애니메이션 */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.ai-tip {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 2rem;
+  border-radius: 20px;
+  margin-top: 2rem;
+  font-size: 22px;
+  color: #166534;
+  line-height: 1.6;
 }
 
-.animate-fade-in {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
-/* 카드 호버 효과 */
-.ranking-card {
-  transition: all 0.3s ease;
-}
-
-.ranking-card:hover {
-  transform: translateY(-8px);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: #00FF88;
-}
-
-/* 게이지 바 애니메이션 */
-.gauge-fill {
-  transition: width 1.5s cubic-bezier(0.1, 0.5, 0.5, 1);
+.ai-tip strong {
+  font-weight: 800;
+  font-size: 24px;
 }
