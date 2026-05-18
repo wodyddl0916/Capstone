@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import ElectricStats from '../ElectricStats'; 
+import ElectricStats from '../ElectricStats'; // 💡 경로 에러를 막기 위해 ../ 유지
 
 const DataUpload = () => {
   // 탭 상태 관리 ('계약정보', '요금정보', '사용량정보')
@@ -56,13 +56,6 @@ const DataUpload = () => {
     container: { maxWidth: '1100px', margin: '0 auto', fontFamily: '"Malgun Gothic", sans-serif', padding: '20px', color: '#333' },
     headerTitle: { fontSize: '28px', fontWeight: 'bold', marginBottom: '10px' },
     breadcrumb: { fontSize: '13px', color: '#666', marginBottom: '20px', display: 'flex', alignItems: 'center' },
-    topInfoBox: { backgroundColor: '#f8f9fa', borderTop: '3px solid #1a5c96', borderBottom: '1px solid #ddd', borderLeft: '1px solid #ddd', borderRight: '1px solid #ddd', padding: '20px', marginBottom: '30px' },
-    infoGrid: { display: 'grid', gridTemplateColumns: '120px 1fr 120px 1fr', gap: '15px', alignItems: 'center' },
-    label: { fontWeight: 'bold', textAlign: 'center', backgroundColor: '#eef1f6', padding: '10px', fontSize: '14px' },
-    inputVal: { backgroundColor: '#fff', border: '1px solid #ccc', padding: '10px', fontSize: '14px', color: '#555' },
-    tabContainer: { display: 'flex', borderBottom: '2px solid #1a5c96', marginBottom: '20px' },
-    activeTab: { backgroundColor: '#1a5c96', color: '#fff', padding: '10px 30px', fontWeight: 'bold', cursor: 'pointer', border: '1px solid #1a5c96', borderBottom: 'none' },
-    inactiveTab: { backgroundColor: '#f4f4f4', color: '#666', padding: '10px 30px', cursor: 'pointer', border: '1px solid #ddd', borderBottom: 'none', marginRight: '5px' },
     table: { width: '100%', borderCollapse: 'collapse', borderTop: '2px solid #666', marginBottom: '30px' },
     th: { backgroundColor: '#f8f9fa', borderBottom: '1px solid #ddd', padding: '12px', textAlign: 'center', fontWeight: 'bold', fontSize: '14px', borderRight: '1px solid #ddd' },
     td: { borderBottom: '1px solid #ddd', padding: '12px', fontSize: '14px', borderRight: '1px solid #ddd', backgroundColor: '#fff' },
@@ -74,12 +67,10 @@ const DataUpload = () => {
   return (
     <div style={styles.container}>
       {/* 1. 상단 타이틀 및 경로 */}
-      <h2 style={styles.headerTitle}>마이페이지</h2>
+      <h2 style={styles.headerTitle}>전력 데이터 업로드</h2>
       <div style={styles.breadcrumb}>
         <span>🏠 마이페이지 &gt; <strong>전력 데이터 업로드</strong></span>
       </div>
-
-      
 
       {/* [사용량정보 탭] - 기존의 데이터 업로드 및 분석 기능 */}
       {activeTab === '사용량정보' && (

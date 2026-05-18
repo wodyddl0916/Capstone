@@ -19,7 +19,7 @@ const Login = ({ onNavigate }) => {
     try {
       // 2. 우선 서버에 로그인 요청을 보냅니다.
       const response = await api.post('/api/login', {
-        username: id,
+        email: id,
         password: pw,
       });
 

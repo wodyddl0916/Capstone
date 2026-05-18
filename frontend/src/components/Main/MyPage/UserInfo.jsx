@@ -48,7 +48,7 @@ const UserInfo = () => {
 
         {/* 브레드크럼 */}
         <div style={{ fontSize: '13px', color: '#666', marginBottom: '30px', display: 'flex', alignItems: 'center', textAlign: 'left' }}>
-          <span>🏠 마이페이지 &gt; <strong>내 정보 관리</strong></span>
+          <span>🏠 마이페이지 &gt; <strong>회원정보</strong></span>
         </div>
 
         <div className="mypage-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '30px', textAlign: 'left' }}>
