@@ -43,7 +43,7 @@ const Login = ({ onNavigate }) => {
       } else {
         // 관리자 정보도 틀리고 서버도 응답이 없는 경우
         if (!error.response) {
-          alert('서버와 연결할 수 없습니다. 관리자 계정(user/1234)으로 시도하거나 서버 상태를 확인하세요.');
+          alert('서버와 연결할 수 없습니다. 서버 상태를 확인하세요.');
         } else {
           // 서버는 작동 중이지만 아이디/비번이 틀린 경우
           const errorMessage = error.response.data.message || '아이디 또는 비밀번호가 일치하지 않습니다.';
