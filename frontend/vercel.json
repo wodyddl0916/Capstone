@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://43.201.202.195:8080/api/:path*"
+    },
+    {
+      "source": "/v1/:path*",
+      "destination": "https://openapi.naver.com/v1/:path*"
+    }
+  ]
+}
