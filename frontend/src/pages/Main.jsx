@@ -60,7 +60,7 @@ const Main = ({ onNavigate }) => {
     <div className="main-layout">
       <nav className="navbar">
         <div className="nav-logo" onClick={() => setActiveMenu('HOME')} style={{cursor: 'pointer'}}>
-          <img src="favicon.svg" alt="logo" />
+          <img src="/favicon.svg" alt="logo" />
           <span>와트메이트</span>
         </div>
         
