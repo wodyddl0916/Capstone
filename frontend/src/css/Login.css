@@ -5,7 +5,7 @@
   align-items: flex-start;
   min-height: 100vh;
   background-color: #ffffff;
-  padding-top: 20vh;
+  padding: 18vh 20px 40px;
 }
 
 .login-container {
@@ -40,11 +40,11 @@
 }
 
 .main-title {
-  font-size: 42px;
+  font-size: clamp(34px, 7vw, 42px);
   font-weight: 800;
   color: #000000;
   margin: 0;
-  letter-spacing: -1.5px;
+  letter-spacing: 0;
 }
 
 .form-section {
@@ -59,7 +59,7 @@
   padding: 17px 20px;
   font-size: 17px;
   border: 1px solid #555555;
-  border-radius: 20px;
+  border-radius: 8px;
   background-color: #FAFAFA;
   outline: none;
   transition: border-color 0.2s;
@@ -78,11 +78,23 @@
   color: #222222;
   background-color: #B4C6B6;
   border: 1px solid #555555;
-  border-radius: 20px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
 .login-button:hover {
   background-color: #a0b3a2;
+}
+
+@media (max-width: 480px) {
+  .login-page {
+    padding-top: 14vh;
+  }
+
+  .input-field,
+  .login-button {
+    font-size: 16px;
+    padding: 15px 16px;
+  }
 }

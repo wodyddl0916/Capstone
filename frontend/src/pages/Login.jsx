@@ -23,10 +23,18 @@ const Login = ({ onNavigate }) => {
         password: pw,
       });
 
-      const { token, message } = response.data;
+      // 🌟 [수정] 백엔드 응답에서 토큰, 메시지와 함께 userId, nickname을 구조 분해 할당합니다.
+      const { token, message, userId, nickname } = response.data;
 
       if (token) {
         localStorage.setItem('accessToken', token);
+        
+        // 🌟 [핵심] DB에서 조회된 진짜 유저 정보가 넘어왔다면 로컬 스토리지에 보관합니다.
+        if (userId) {
+          localStorage.setItem('userId', userId);
+          localStorage.setItem('nickname', nickname || '사용자');
+        }
+
         alert(message || '로그인 성공! 환영합니다.');
         onNavigate('main'); 
       }
@@ -38,12 +46,16 @@ const Login = ({ onNavigate }) => {
         // 비상용 가짜 토큰 생성 및 저장
         localStorage.setItem('accessToken', 'admin-bypass-token-2026');
         
+        // 🌟 [안전장치] 비상 우회 시에도 업로드 에러 방지를 위해 임시 세션을 세팅합니다.
+        localStorage.setItem('userId', '2'); 
+        localStorage.setItem('nickname', '관리자(우회)');
+
         alert('서버 오프라인: 관리자 계정으로 우회 접속합니다.');
         onNavigate('main');
       } else {
         // 관리자 정보도 틀리고 서버도 응답이 없는 경우
         if (!error.response) {
-          alert('서버와 연결할 수 없습니다. 서버 상태를 확인하세요.');
+          alert('서버와 연결할 수 없습니다. 관리자 계정(user/1234)으로 시도하거나 서버 상태를 확인하세요.');
         } else {
           // 서버는 작동 중이지만 아이디/비번이 틀린 경우
           const errorMessage = error.response.data.message || '아이디 또는 비밀번호가 일치하지 않습니다.';

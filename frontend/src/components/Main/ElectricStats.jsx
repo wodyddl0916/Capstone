@@ -7,10 +7,13 @@ const ElectricStats = ({ thisWeek, nextWeek }) => {
   // 데이터가 없을 경우를 대비한 안전 장치
   if (!thisWeek || !nextWeek) return <p style={{textAlign: 'center', padding: '20px'}}>데이터를 분석 중이거나 불러올 수 없습니다.</p>;
 
+  const thisWeekData = Array.isArray(thisWeek) ? thisWeek : [thisWeek];
+  const nextWeekData = Array.isArray(nextWeek) ? nextWeek : [nextWeek];
+
   // 데이터 변환: '이번주' -> '월평균', '다음주' -> '예측'으로 명칭 변경
-  const chartData = thisWeek.map((val, index) => {
+  const chartData = thisWeekData.map((val, index) => {
     const avgVal = val !== undefined && val !== null ? val : 0;
-    const predVal = nextWeek[index] !== undefined && nextWeek[index] !== null ? nextWeek[index] : 0;
+    const predVal = nextWeekData[index] !== undefined && nextWeekData[index] !== null ? nextWeekData[index] : 0;
 
     return {
       name: `${String(index + 1).padStart(2, '0')}:00`,

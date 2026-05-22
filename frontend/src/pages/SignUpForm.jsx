@@ -12,7 +12,10 @@ export default function SignUpForm({ onNavigate }) {
     confirmPassword: '',
     nickname: '',       // 사용자 이름
     kepcoCustNo: '',    // 한전 고객번호 (필수 10자리)
+    region: '',
+    location: null,
     householdCount: 1,  // 가구원 수 (숫자)
+    houseVerifyMethod: 'customer_no',
     agree: false,
   });
 
@@ -22,6 +25,20 @@ export default function SignUpForm({ onNavigate }) {
     setForm((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleChangeRegion = (region) => {
+    setForm((prev) => ({
+      ...prev,
+      region,
+    }));
+  };
+
+  const handleChangeLocation = (location) => {
+    setForm((prev) => ({
+      ...prev,
+      location,
     }));
   };
 
@@ -80,6 +97,8 @@ export default function SignUpForm({ onNavigate }) {
             onChange={handleChange}
             onSubmit={handleSubmit}
             onNavigate={onNavigate}
+            onChangeRegion={handleChangeRegion}
+            onChangeLocation={handleChangeLocation}
           />
         </div>
       </div>

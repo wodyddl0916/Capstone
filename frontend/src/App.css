@@ -4,9 +4,23 @@
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
 }
 
+html,
 body {
   margin: 0;
+  min-width: 0;
   background-color: #f5f7fa;
   color: #333;
   line-height: 1.6;
+  overflow-x: hidden;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
 }

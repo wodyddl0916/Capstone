@@ -1,124 +1,142 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+  ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Legend
+} from 'recharts';
 
 const DailyStats = () => {
-  const [selectedDate, setSelectedDate] = useState("2026-05-01");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedYear, setSelectedYear] = useState("2026"); 
+  const [selectedMonth, setSelectedMonth] = useState("05"); 
 
-  const handleSearch = () => {
-    alert(`${selectedDate} 날짜의 전기사용량을 조회합니다.`);
+  const fetchData = async () => {
+    // 🌟 [수정] 오직 로그인 성공 시 세팅된 진짜 DB 기반의 user_id만 가로챕니다.
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      console.error("⚠️ 로그인 인증 식별자(userId)가 검출되지 않았습니다.");
+      setData([]);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // 🌟 [통신 경로 명확화] AWS 백엔드 주소 지정
+      const response = await axios.get(`http://43.201.202.195:8080/api/power/daily`, {
+        params: { userId: parseInt(userId, 10), month: parseInt(selectedMonth), year: parseInt(selectedYear) }
+      });
+      
+      console.log("📊 [디버깅] 백엔드 수신 원본 데이터 규격:", response.data);
+
+      const isFutureMonth = parseInt(selectedMonth) >= 5;
+
+      const formatted = response.data.map(item => {
+        const dateParts = item.date.split('-');
+        const dayLabel = `${parseInt(dateParts[2])}일`;
+
+        let val = 0;
+
+        if (isFutureMonth) {
+          val = item.predUsageKwh !== undefined && item.predUsageKwh > 0 ? item.predUsageKwh : 
+                (item.pred_usage_kwh !== undefined && item.pred_usage_kwh > 0 ? item.pred_usage_kwh : (item.usage || 0));
+        } else {
+          val = item.realUsageKwh !== undefined && item.realUsageKwh > 0 ? item.realUsageKwh : 
+                (item.real_usage_kwh !== undefined && item.real_usage_kwh > 0 ? item.real_usage_kwh : (item.usage || 0));
+        }
+
+        val = parseFloat(parseFloat(val).toFixed(2));
+
+        return {
+          name: dayLabel, 
+          fullDate: item.date, 
+          real: !isFutureMonth ? val : null,
+          pred: isFutureMonth ? val : null,
+        };
+      });
+      
+      setData(formatted);
+
+    } catch (error) {
+      console.error("데이터 로드 실패:", error);
+      setData([]); 
+    } finally { setLoading(false); }
   };
 
+  useEffect(() => { 
+    fetchData(); 
+  }, [selectedYear, selectedMonth]); 
+
+  const realValues = data.map(d => d.real).filter(v => v !== null);
+  const maxRealUsage = realValues.length > 0 ? Math.max(...realValues) : 0;
+
   return (
-    <div className="electric-page">
-      <style>{`
-        .electric-page { width: 100%; min-height: calc(100vh - 100px); background: #f4f7fb; padding: 50px 0 80px; color: #222; }
-        .electric-header { width: 70%; margin: 0 auto 30px; }
-        .electric-header h1 { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
-        .electric-header p { font-size: 15px; color: #666; }
+    <div className="electric-page" style={{ padding: '20px', background: '#f4f7fb' }}>
+      <div className="electric-header" style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <h1 style={{ color: '#1a202c', fontSize: '28px', fontWeight: 'bold' }}>일별 사용량 및 AI 미래 예측</h1>
+      </div>
+      
+      <div className="electric-filter" style={{ display: 'flex', gap: '10px', marginBottom: '25px', justifyContent: 'center', alignItems: 'center' }}>
+        <select value={selectedYear} onChange={e => setSelectedYear(e.target.value)} style={{ padding: '8px 15px', fontSize: '14px', borderRadius: '4px', border: '1px solid #ccd0d5', background: '#fff' }}>
+          <option value="2024">2024년</option>
+          <option value="2025">2025년</option>
+          <option value="2026">2026년</option>
+        </select>
 
-        .electric-filter {
-          width: 70%;
-          min-height: 70px;
-          margin: 0 auto 24px;
-          padding: 0 28px;
-          background: #ffffff;
-          border: 1px solid #d9dee7;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .filter-group { display: flex; align-items: center; gap: 10px; }
-        .filter-group span { font-size: 15px; font-weight: 700; color: #1f4e93; }
-
-        .filter-group input[type="date"] {
-          height: 34px;
-          padding: 0 12px;
-          border: 1px solid #b8c1cc;
-          background: white;
-          font-size: 14px;
-          color: #333;
-          cursor: pointer;
-        }
-
-        .search-btn { width: 82px; height: 36px; background: #0b4c91; color: white; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; }
-        .search-btn:hover { background: #083a70; }
-
-        .electric-section-title { width: 70%; height: 58px; margin: 0 auto 24px; background: linear-gradient(#ffffff, #f2f4f7); border: 1px solid #d9dee7; display: flex; align-items: center; }
-        .electric-section-title span { width: 28px; height: 38px; margin-left: 22px; margin-right: 20px; background: #4b79c7; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%); }
-        .electric-section-title h2 { font-size: 21px; font-weight: 800; color: #0b4c91; }
-
-        .chart-box { width: 70%; height: 360px; margin: 0 auto 28px; background: #ffffff; border: 1px solid #cbd5e1; padding: 24px; }
-        .chart-placeholder { width: 100%; height: 100%; border: 2px dashed #cbd5e1; background: #f8fafc; color: #8a94a6; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; }
-
-        .summary-box { width: 70%; margin: 0 auto 26px; background: #ffffff; border-top: 1px solid #bfc6d1; border-bottom: 1px solid #bfc6d1; display: grid; grid-template-columns: repeat(4, 1fr); }
-        .summary-box div { height: 68px; border-right: 1px solid #d1d5db; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #333; }
-        .summary-box div:last-child { border-right: none; }
-
-        .table-box { width: 70%; margin: 0 auto; background: #ffffff; }
-        .table-box table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        .table-box th { height: 46px; background: #f7f7f7; border: 1px solid #c9cdd3; font-weight: 800; color: #333; }
-        .table-box td { height: 42px; border: 1px solid #c9cdd3; text-align: center; color: #777; }
-
-        @media (max-width: 1200px) {
-          .electric-header, .electric-filter, .electric-section-title, .chart-box, .summary-box, .table-box { width: 90%; }
-          .electric-filter { flex-direction: column; align-items: flex-start; padding: 18px; gap: 14px; }
-          .summary-box { grid-template-columns: repeat(2, 1fr); }
-        }
-      `}</style>
-
-      <div className="electric-header">
-        <h1>일별</h1>
-        <p>전기사용량을 일별 기준으로 확인하는 페이지입니다.</p>
+        <select value={selectedMonth} onChange={e => setSelectedMonth(e.target.value)} style={{ padding: '8px 15px', fontSize: '14px', borderRadius: '4px', border: '1px solid #ccd0d5', background: '#fff' }}>
+          <option value="01">01월 [실측 기록]</option>
+          <option value="02">02월 [실측 기록]</option>
+          <option value="03">03월 [실측 기록]</option>
+          <option value="04">04월 [실측 기록]</option>
+          <option value="05">05월 [AI 미래 예측]</option>
+        </select>
+        <button className="search-btn" onClick={fetchData} style={{ padding: '8px 25px', background: '#0b4c91', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px' }}>조회</button>
       </div>
 
-      <div className="electric-filter">
-        <div className="filter-group">
-          <span>일선택</span>
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
-        </div>
+      <div className="chart-box" style={{ display: 'block', height: '480px', width: '100%', minWidth: '300px', background: '#fff', padding: '25px', border: '1px solid #d9dee7', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', borderRadius: '8px' }}>
+        {loading ? (
+          <div className="chart-placeholder" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#0b4c91', fontWeight: 'bold', fontSize: '16px' }}>
+            🔄 WattMate AI 엔진이 전력 소비 패턴 리포트를 빌드하고 있습니다...
+          </div>
+        ) : data.length > 0 ? (
+          <ResponsiveContainer width="100%" height="100%" minHeight={400}>
+            <ComposedChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+              <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#555' }} height={40} />
+              <YAxis unit=" kWh" tick={{ fontSize: 12, fill: '#555' }} axisLine={false} tickLine={false} />
+              
+              <Tooltip formatter={(value, name) => [`${value} kWh`, name]} contentStyle={{ borderRadius: '8px', border: '1px solid #ccc', backgroundColor: 'rgba(255, 255, 255, 0.95)' }} />
+              <Legend verticalAlign="top" align="right" wrapperStyle={{ paddingBottom: '25px', fontSize: '13px' }} />
 
-        <button className="search-btn" onClick={handleSearch}>
-          조회
-        </button>
-      </div>
+              <Bar dataKey="real" name="당일 실측 사용량" barSize={14} radius={[4, 4, 0, 0]}>
+                {data.map((entry, index) => (
+                  <Cell key={index} fill={entry.real === maxRealUsage ? '#e02b20' : '#4bc0c0'} />
+                ))}
+              </Bar>
 
-      <div className="electric-section-title">
-        <span></span>
-        <h2>일별 전기사용량</h2>
-      </div>
+              <Bar dataKey="pred" name="[AI 예측] 일별 예상 전력량" barSize={14} radius={[4, 4, 0, 0]}>
+                {data.map((entry, index) => (
+                  <Cell key={index} fill="#7f8c8d" /> 
+                ))}
+              </Bar>
 
-      <div className="chart-box">
-        <div className="chart-placeholder">그래프 영역</div>
-      </div>
-
-      <div className="summary-box">
-        <div>최대 kWh</div>
-        <div>최소 kWh</div>
-        <div>평균 kWh</div>
-        <div>사용량 합계</div>
-      </div>
-
-      <div className="table-box">
-        <table>
-          <thead>
-            <tr>
-              <th>일자</th>
-              <th>사용량(kWh)</th>
-              <th>전년동일(kWh)</th>
-              <th>요금(원)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colSpan="4">데이터 영역</td>
-            </tr>
-          </tbody>
-        </table>
+              <Line 
+                type="monotone" 
+                dataKey="pred" 
+                name="[AI 예측] 소비 궤적 트렌드" 
+                stroke="#ff9f40" 
+                strokeWidth={3} 
+                dot={{ r: 3, strokeWidth: 2, fill: '#fff', stroke: '#ff9f40' }} 
+                activeDot={{ r: 6 }}
+                connectNulls={true} 
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="chart-placeholder" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#888' }}>
+            조회 데이터 공백: 먼저 마이페이지에서 전력 관리 CSV 파일을 업로드해 주세요.
+          </div>
+        )}
       </div>
     </div>
   );
