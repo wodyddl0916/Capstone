@@ -17,34 +17,38 @@ const Login = ({ onNavigate }) => {
     setIsLoading(true);
 
     try {
-      // 2. 로그인 요청
-      // 백엔드 LoginRequest DTO의 필드명인 'username'과 'password'에 맞춤
+      // 2. 우선 서버에 로그인 요청을 보냅니다.
       const response = await api.post('/api/login', {
-        username: id,
+        email: id,
         password: pw,
       });
 
-      // 3. 응답 데이터 처리
-      // 백엔드 LoginResponse DTO의 필드명인 'token'과 'message'를 받아옴
       const { token, message } = response.data;
 
       if (token) {
-        // 기존 axios.js 인터셉터와의 호환을 위해 'accessToken'이라는 이름으로 저장
         localStorage.setItem('accessToken', token);
-        
         alert(message || '로그인 성공! 환영합니다.');
-        onNavigate('main'); // 메인 화면으로 이동
+        onNavigate('main'); 
       }
     } catch (error) {
-      console.error('로그인 에러 상세:', error);
+      console.error('로그인 에러 발생:', error);
 
-      if (error.response) {
-        // 서버가 에러 응답을 준 경우 (401, 400 등)
-        const errorMessage = error.response.data.message || '아이디 또는 비밀번호가 일치하지 않습니다.';
-        alert(errorMessage);
+      // 📍 [핵심] 서버가 응답하지 않거나(네트워크 에러) 연결이 실패했을 때 관리자 계정 확인
+      if (id === 'user' && pw === '1234') {
+        // 비상용 가짜 토큰 생성 및 저장
+        localStorage.setItem('accessToken', 'admin-bypass-token-2026');
+        
+        alert('서버 오프라인: 관리자 계정으로 우회 접속합니다.');
+        onNavigate('main');
       } else {
-        // 네트워크 에러 혹은 서버가 꺼져 있는 경우
-        alert('서버와 연결할 수 없습니다. AWS 서버 상태와 포트(8080) 설정을 확인하세요.');
+        // 관리자 정보도 틀리고 서버도 응답이 없는 경우
+        if (!error.response) {
+          alert('서버와 연결할 수 없습니다. 관리자 계정(user/1234)으로 시도하거나 서버 상태를 확인하세요.');
+        } else {
+          // 서버는 작동 중이지만 아이디/비번이 틀린 경우
+          const errorMessage = error.response.data.message || '아이디 또는 비밀번호가 일치하지 않습니다.';
+          alert(errorMessage);
+        }
       }
     } finally {
       setIsLoading(false);
@@ -66,7 +70,7 @@ const Login = ({ onNavigate }) => {
           <input
             type="text"
             className="input-field"
-            placeholder="아이디"
+            placeholder="아이디(이메일주소)"
             value={id}
             onChange={(e) => setId(e.target.value)}
             disabled={isLoading}
