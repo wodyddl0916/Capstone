@@ -2,22 +2,16 @@
 .main-layout {
   width: 100%;
   background-color: #f9f9f9;
-<<<<<<< HEAD
   overflow-x: hidden;
-=======
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
 }
 
 /* -------------------------------------
    네비게이션 바 (GNB)
 ------------------------------------- */
 .navbar {
-<<<<<<< HEAD
   --nav-column-width: 112px;
   --nav-menu-width: calc(var(--nav-column-width) * 4);
   --nav-logout-width: 74px;
-=======
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -37,10 +31,7 @@
   font-weight: bold;
   font-size: 20px;
   letter-spacing: 1px;
-<<<<<<< HEAD
   flex-shrink: 0;
-=======
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
 }
 
 .nav-logo img {
@@ -56,7 +47,6 @@
   height: 100%;
   margin-left: auto;
   margin-right: 50px;
-<<<<<<< HEAD
   min-width: 0;
 }
 
@@ -65,34 +55,20 @@
   grid-template-columns: repeat(4, var(--nav-column-width));
   height: 100%;
   min-width: 0;
-=======
-}
-
-.nav-menu {
-  display: flex;
-  height: 100%;
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
 }
 
 .menu-item {
   display: flex;
   align-items: center; /* 글자 세로 중앙 정렬 및 높이 100% 꽉 차게 */
-<<<<<<< HEAD
   justify-content: center;
   padding: 0 12px;
-=======
-  padding: 0 30px;
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
   font-size: 14px;
   font-weight: 600;
   color: #666;
   cursor: pointer;
   border-left: 1px solid #f0f0f0;
   transition: 0.3s;
-<<<<<<< HEAD
   white-space: nowrap;
-=======
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
 }
 
 .menu-item:last-child {
@@ -109,10 +85,7 @@
 }
 
 .logout-btn {
-<<<<<<< HEAD
   width: var(--nav-logout-width);
-=======
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
   background: none;
   border: 1px solid #ccc;
   padding: 8px 15px;
@@ -145,7 +118,6 @@
   opacity: 0;
   overflow: hidden;
   transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-<<<<<<< HEAD
 }
 
 .mega-dropdown.show {
@@ -168,38 +140,12 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-=======
-}
-
-.mega-dropdown.show {
-  max-height: 400px; /* 서브메뉴 내용이 다 보일 만큼 넉넉한 높이 */
-  opacity: 1;
-}
-
-.dropdown-container {
-  display: flex;
-  justify-content: center;
-  gap: 60px; /* 카테고리 간격 */
-  padding: 40px 0;
-  border-top: 1px solid #f0f0f0;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.dropdown-section {
-  display: flex;
-  flex-direction: column;
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
 }
 
 .dropdown-section h4 {
   font-size: 16px;
   font-weight: 700;
-<<<<<<< HEAD
   margin: 0 0 20px;
-=======
-  margin-bottom: 20px;
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
   color: #333;
 }
 
@@ -250,10 +196,7 @@
 .hero-content {
   text-align: center;
   color: white;
-<<<<<<< HEAD
   width: min(920px, calc(100% - 32px));
-=======
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
 }
 
 .hero-content h4 {
@@ -263,16 +206,10 @@
 }
 
 .hero-content h1 {
-<<<<<<< HEAD
   font-size: clamp(30px, 4.5vw, 48px);
   margin-bottom: 20px;
   font-weight: 300;
   line-height: 1.25;
-=======
-  font-size: 48px;
-  margin-bottom: 20px;
-  font-weight: 300;
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
 }
 
 .hero-btn {
@@ -327,11 +264,7 @@
 .summary-section {
   display: flex;
   background: white;
-<<<<<<< HEAD
   border-radius: 8px;
-=======
-  border-radius: 4px;
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   padding: 30px 0;
 }

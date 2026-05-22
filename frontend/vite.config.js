@@ -9,15 +9,6 @@ export default defineConfig({
     port: 5173,      // 포트 번호 고정 (유지)
     strictPort: true, // 포트 자동 변경 방지 (유지)
     watch: {
-<<<<<<< HEAD
-      usePolling: true, // Windows/Docker 환경에서 파일 변경 감지 활성화
-    },
-    // --- 네이버 API 프록시 설정 추가 ---
-    proxy: {
-      '/v1': {
-        target: 'https://openapi.naver.com',
-        changeOrigin: true,
-=======
       usePolling: true, // 파일 변경 감지 활성화 (유지)
     },
     // --- 프록시 설정 영역 ---
@@ -32,7 +23,6 @@ export default defineConfig({
         target: 'http://43.201.202.195:8080', // 스프링 부트 서버 주소
         changeOrigin: true,
         secure: false,
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
       }
     }
     // --------------------------------

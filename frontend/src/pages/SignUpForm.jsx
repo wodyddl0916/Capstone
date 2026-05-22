@@ -12,14 +12,10 @@ export default function SignUpForm({ onNavigate }) {
     confirmPassword: '',
     nickname: '',       // 사용자 이름
     kepcoCustNo: '',    // 한전 고객번호 (필수 10자리)
-<<<<<<< HEAD
     region: '',
     location: null,
     householdCount: 1,  // 가구원 수 (숫자)
     houseVerifyMethod: 'customer_no',
-=======
-    householdCount: 1,  // 가구원 수 (숫자)
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
     agree: false,
   });
 
@@ -101,11 +97,8 @@ export default function SignUpForm({ onNavigate }) {
             onChange={handleChange}
             onSubmit={handleSubmit}
             onNavigate={onNavigate}
-<<<<<<< HEAD
             onChangeRegion={handleChangeRegion}
             onChangeLocation={handleChangeLocation}
-=======
->>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
           />
         </div>
       </div>
