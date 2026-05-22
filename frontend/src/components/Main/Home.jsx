@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import axios from 'axios';
 
 const SUMMARY_YEAR = 2026;
 const SUMMARY_MONTH = 4;
+=======
+>>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
 
 const Home = () => {
   const [banners, setBanners] = useState([]);
   const [activeBanner, setActiveBanner] = useState(0);
   const [loading, setLoading] = useState(true);
 
+<<<<<<< HEAD
   // 📍 [추가된 부분 1] 사용자 요약 정보(월간 총 전력, 요금, 리워드)를 담을 상태(State)
   const [summaryData, setSummaryData] = useState({
     monthlyTotalPower: 0,
+=======
+  // 📍 [추가된 부분 1] 사용자 요약 정보(실시간 전력, 요금, 리워드)를 담을 상태(State)
+  const [summaryData, setSummaryData] = useState({
+    power: 0,
+>>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
     cost: 0,
     reward: 0
   });
@@ -78,6 +87,7 @@ const Home = () => {
   useEffect(() => {
     const fetchSummaryData = async () => {
       try {
+<<<<<<< HEAD
         const userId = localStorage.getItem('userId');
 
         const nextSummaryData = {
@@ -101,6 +111,20 @@ const Home = () => {
         }
 
         setSummaryData(nextSummaryData);
+=======
+        // 실제 프로젝트에서는 아래처럼 백엔드 API를 호출합니다.
+        // const response = await fetch('/api/user/energy-summary');
+        // const data = await response.json();
+
+        // 임시로 백엔드에서 받아왔다고 가정한 실제 사용자 데이터 (Mock Data)
+        const mockData = {
+          power: 12.34, // 12.34 kWh
+          cost: 4560,   // 4,560 원
+          reward: 1500  // 1,500 P
+        };
+
+        setSummaryData(mockData);
+>>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
       } catch (error) {
         console.error("사용자 데이터 로드 실패:", error);
       }
@@ -150,8 +174,13 @@ const Home = () => {
         <div className="summary-section">
           {/* 📍 [추가된 부분 3] 고정된 텍스트 대신 state(summaryData) 값으로 변경 */}
           <div className="summary-box">
+<<<<<<< HEAD
             <span>이번달 총 전력 ({SUMMARY_YEAR}년 {SUMMARY_MONTH}월)</span>
             <strong>{summaryData.monthlyTotalPower.toLocaleString()} kWh</strong>
+=======
+            <span>실시간 전력</span>
+            <strong>{summaryData.power} kWh</strong>
+>>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
           </div>
           <div className="summary-box border-side">
             <span>예상 요금</span>
@@ -168,4 +197,8 @@ const Home = () => {
   );
 };
 
+<<<<<<< HEAD
 export default Home;
+=======
+export default Home;
+>>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178

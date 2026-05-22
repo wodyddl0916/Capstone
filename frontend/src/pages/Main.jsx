@@ -23,8 +23,13 @@ const Main = ({ onNavigate }) => {
   const topMenus = ['HOME', '전기사용량', '리그통계', '마이페이지'];
 
   const subMenus = [
+<<<<<<< HEAD
     { title: 'HOME', items: [''] },
     { title: '전기사용량', items: ['시간대별', '일별', '월별'] },
+=======
+    { title: 'HOME', items: ['HOME'] },
+    { title: '전기사용량', items: ['시간대별', '일별', '월별', '연도별'] },
+>>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
     { title: '리그통계', items: ['지역 리그', '절약 순위', '리워드 랭킹'] },
     { title: '마이페이지', items: ['회원정보', '목표 설정', '전력 데이터 업로드'] }
   ];
@@ -37,6 +42,10 @@ const Main = ({ onNavigate }) => {
       case '시간대별': return <HourlyStats />;
       case '일별': return <DailyStats />;
       case '월별': return <MonthlyStats />;
+<<<<<<< HEAD
+=======
+      case '연도별': return <ElectricStats />; // 연도별은 임시로 ElectricStats 렌더링
+>>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
       case '리그통계': case '지역 리그': return <RegionalLeague />;
       case '절약 순위': return <SavingRank />;
       case '리워드 랭킹': return <RewardRanking />;
@@ -60,7 +69,11 @@ const Main = ({ onNavigate }) => {
     <div className="main-layout">
       <nav className="navbar">
         <div className="nav-logo" onClick={() => setActiveMenu('HOME')} style={{cursor: 'pointer'}}>
+<<<<<<< HEAD
           <img src="/favicon.svg" alt="logo" />
+=======
+          <img src="favicon.svg" alt="logo" />
+>>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
           <span>와트메이트</span>
         </div>
         

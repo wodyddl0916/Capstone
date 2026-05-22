@@ -15,10 +15,15 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.15.1",
+<<<<<<< HEAD
     "rechart": "^0.0.1",
     "recharts": "^3.8.1",
     "styled-components": "^6.3.12",
     "xlsx": "^0.18.5"
+=======
+    "recharts": "^3.8.1",
+    "styled-components": "^6.3.12"
+>>>>>>> 9d801cd8bf0c151b2e4677021c727754b609c178
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
