@@ -11,6 +11,7 @@ import GoalSetting from "../components/Main/MyPage/GoalSetting";
 import UserInfo from "../components/Main/MyPage/UserInfo";
 
 import RegionalLeague from "../components/Main/LeagueStats/RegionalLeague";
+import ElectricBillPage from "../components/Main/ElectricBillPage";
 
 // 포인트 상점 컴포넌트 임포트
 import PointStore from "../components/Main/PointStore/PointStore";
@@ -22,12 +23,13 @@ const Main = ({ onNavigate }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // 🌟 [순서 고정] 상단 클릭 메뉴 순서: 마이페이지를 맨 끝(오른쪽)으로!
-  const topMenus = ['HOME', '전기사용량', '리그통계', '포인트상점', '마이페이지'];
+  const topMenus = ['HOME', '전기사용량', '전기요금', '리그통계', '포인트상점', '마이페이지'];
 
   // 🌟 [순서 고정] 하단 드롭다운 섹션 순서: 상단과 1:1로 정확하게 매칭!
   const subMenus = [
     { title: 'HOME', items: [''] },
     { title: '전기사용량', items: ['시간대별', '일별', '월별'] },
+    { title: '전기요금', items: ['전기요금표', '이번달 전기요금 예측'] },
     { title: '리그통계', items: ['지역 리그 순위',] },
     { title: '포인트상점', items: ['상품 구매'] },
     { title: '마이페이지', items: ['회원정보', '목표 설정', '전력 데이터 업로드'] }
@@ -41,6 +43,9 @@ const Main = ({ onNavigate }) => {
       case '시간대별': return <HourlyStats />;
       case '일별': return <DailyStats />;
       case '월별': return <MonthlyStats />;
+      case '전기요금':
+      case '전기요금표': return <ElectricBillPage view="tariff" />;
+      case '이번달 전기요금 예측': return <ElectricBillPage view="estimate" />;
       case '리그통계': case '지역 리그 순위': return <RegionalLeague />;
       case '포인트상점':
       case '상품 구매': return <PointStore />;
@@ -55,6 +60,8 @@ const Main = ({ onNavigate }) => {
   const handleMenuClick = (menuName) => {
     if (menuName === '전기사용량') {
       setActiveMenu('시간대별');
+    } else if (menuName === '전기요금') {
+      setActiveMenu('전기요금표');
     } else if (menuName === '포인트상점') {
       setActiveMenu('상품 구매');
     } else if (menuName === '마이페이지') {
@@ -84,6 +91,7 @@ const Main = ({ onNavigate }) => {
             {topMenus.map((menu) => {
               const isMainActive = activeMenu === menu || 
                 (menu === '전기사용량' && ['시간대별', '일별', '월별'].includes(activeMenu)) ||
+                (menu === '전기요금' && ['전기요금표', '이번달 전기요금 예측'].includes(activeMenu)) ||
                 (menu === '리그통계' && ['지역 리그', '절약 순위', '리워드 랭킹'].includes(activeMenu)) ||
                 (menu === '포인트상점' && ['상품 구매'].includes(activeMenu)) ||
                 (menu === '마이페이지' && ['회원정보', '목표 설정', '전력 데이터 업로드'].includes(activeMenu));
@@ -101,9 +109,9 @@ const Main = ({ onNavigate }) => {
             })}
           </div>
 
-          {/* 🌟 [드롭다운 정렬] 상단 메뉴와 열 크기를 완벽하게 5칸(20%씩)으로 쪼갠 메가 드롭다운 */}
+          {/* 🌟 [드롭다운 정렬] 상단 메뉴와 열 크기를 완벽하게 6칸으로 쪼갠 메가 드롭다운 */}
           <div className={`mega-dropdown ${isDropdownOpen ? 'show' : ''}`} style={{ width: '100%' }}>
-            <div className="dropdown-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', width: '100%' }}>
+            <div className="dropdown-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', width: '100%' }}>
               {subMenus.map((menu, index) => {
                 const isSectionActive = activeMenu === menu.title || menu.items.includes(activeMenu);
 

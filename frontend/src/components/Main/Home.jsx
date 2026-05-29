@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { calculateElectricBill } from './ElectricBillEstimator';
 
-const SUMMARY_YEAR = 2026;
-const SUMMARY_MONTH = 4;
+const now = new Date();
+const SUMMARY_YEAR = now.getFullYear();
+const SUMMARY_MONTH = now.getMonth() + 1;
+
+const getProjectedMonthlyUsage = (usage) => {
+  const today = new Date();
+  const currentDay = today.getDate();
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const progressRatio = currentDay / daysInMonth;
+
+  return usage > 0 ? usage / Math.max(progressRatio, 0.01) : 0;
+};
 
 const Home = () => {
   const [banners, setBanners] = useState([]);
@@ -82,7 +93,7 @@ const Home = () => {
 
         const nextSummaryData = {
           monthlyTotalPower: 0,
-          cost: 4560,
+          cost: 0,
           reward: 1500
         };
 
@@ -99,6 +110,11 @@ const Home = () => {
             ? Number(parseFloat(monthData.usage).toFixed(2))
             : 0;
         }
+
+        nextSummaryData.cost = calculateElectricBill(
+          getProjectedMonthlyUsage(nextSummaryData.monthlyTotalPower),
+          'high'
+        ).total;
 
         setSummaryData(nextSummaryData);
       } catch (error) {
@@ -155,7 +171,6 @@ const Home = () => {
           </div>
           <div className="summary-box border-side">
             <span>예상 요금</span>
-            {/* toLocaleString()을 쓰면 4500이 4,500 처럼 천 단위 콤마가 붙습니다 */}
             <strong>{summaryData.cost.toLocaleString()} 원</strong>
           </div>
           <div className="summary-box">
