@@ -90,13 +90,35 @@ const RegionalLeague = () => {
     return Number((totalUsage / validUsages.length).toFixed(2));
   }, [rankingList]);
 
-  // 🌟 [보안 및 연동 완료] JWT 토큰 인증 헤더를 포함한 실시간 전체 랭킹 취합 파이프라인
+  // 🌟 [성진님 기획 장착] 실시간 상위 % 계산 및 예상 리워드 배정 연산 파이프라인
+  const estimatedRewardInfo = useMemo(() => {
+    if (rankingList.length === 0) return { percentile: 0, reward: '0 WP' };
+    
+    const myIndex = rankingList.findIndex((item) => item.userId === currentUserId);
+    if (myIndex === -1) return { percentile: 0, reward: '0 WP' };
+
+    const myRank = rankingList[myIndex].rank;
+    const total = rankingList.length;
+    const percentile = (myRank / total) * 100; // 상위 몇 % 인지 산출
+
+    let reward = '0 WP';
+    if (percentile <= 5.0) reward = '3,000 WP';
+    else if (percentile <= 15.0) reward = '2,000 WP';
+    else if (percentile <= 30.0) reward = '1,000 WP';
+    else if (percentile <= 50.0) reward = '500 WP';
+
+    return {
+      percentile: percentile.toFixed(1),
+      reward
+    };
+  }, [rankingList, currentUserId]);
+
+  // 🌟 JWT 토큰 인증 헤더를 포함한 실시간 전체 랭킹 취합 파이프라인
   const fetchMonthlyRanking = async () => {
     setLoading(true);
     setErrorMessage('');
 
     try {
-      // 1. 로그인 성공 시 브라우저 내부(localStorage)에 세션 저장해둔 진짜 JWT 토큰 획득
       const token = localStorage.getItem('accessToken');
 
       if (!token) {
@@ -105,7 +127,6 @@ const RegionalLeague = () => {
         return;
       }
 
-      // 2. 🔑 Axios 요청 헤더에 Authorization Bearer 토큰 서명을 탑재하여 백엔드 403 인증 철벽 돌파
       const usersResponse = await axios.get(`${API_BASE_URL}/api/users`, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -118,14 +139,12 @@ const RegionalLeague = () => {
         return;
       }
 
-      // 3. 받아온 실시간 유저 리스트를 기반으로 각 유저의 전력 데이터 순회 매핑
       const rows = await Promise.all(
         dbUsers.map(async (user) => {
           const uId = user.userId ?? user.user_id;
           const nick = user.nickname ?? '알 수 없는 사용자';
 
           try {
-            // 개별 전력 통계 데이터 요청 시에도 똑같이 보안 인증 헤더(Headers)를 적용합니다.
             const response = await axios.get(`${API_BASE_URL}/api/power/monthly`, {
               params: {
                 userId: uId,
@@ -181,7 +200,6 @@ const RegionalLeague = () => {
         })
       );
 
-      // 4. 절약 수치(saving) 기준으로 내림차순 정렬하여 동적 순위 부여
       const sortedRows = rows
         .sort((a, b) => {
           if (a.saving === null) return 1;
@@ -225,32 +243,40 @@ const RegionalLeague = () => {
         <strong style={{ color: primaryBlue }}>지역 리그</strong>
       </div>
 
+      {/* 🌟 [수정] 성진님 기획에 따른 4칸짜리 종합 모니터링 대시보드 */}
       <div style={{
         border: `2px solid ${primaryBlue}`,
         borderRadius: '8px',
-        padding: '20px 40px',
+        padding: '20px 30px',
         backgroundColor: lightGray,
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr',
-        gap: '20px',
+        gridTemplateColumns: '1fr 1.1fr 0.9fr 1.2fr',
+        gap: '15px',
         marginBottom: '24px'
       }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ width: '120px', fontWeight: 'bold', textAlign: 'center' }}>내 닉네임</span>
-          <div style={{ flex: 1, backgroundColor: '#e9ecef', padding: '8px 15px', borderRadius: '4px', border: '1px solid #ced4da' }}>
+          <span style={{ width: '90px', fontWeight: 'bold', textAlign: 'center' }}>내 닉네임</span>
+          <div style={{ flex: 1, backgroundColor: '#e9ecef', padding: '8px 12px', borderRadius: '4px', border: '1px solid #ced4da' }}>
             {myRankInfo.nickname}
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ width: '120px', fontWeight: 'bold', textAlign: 'center' }}>절약 순위</span>
-          <div style={{ flex: 1, backgroundColor: '#e9ecef', padding: '8px 15px', borderRadius: '4px', border: '1px solid #ced4da', color: '#0056b3', fontWeight: 'bold' }}>
+          <span style={{ width: '90px', fontWeight: 'bold', textAlign: 'center' }}>절약 순위</span>
+          <div style={{ flex: 1, backgroundColor: '#e9ecef', padding: '8px 12px', borderRadius: '4px', border: '1px solid #ced4da', color: '#0056b3', fontWeight: 'bold' }}>
             {myRankInfo.rank} / {myRankInfo.usage}
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ width: '150px', fontWeight: 'bold', textAlign: 'center' }}>전체 평균</span>
-          <div style={{ flex: 1, backgroundColor: '#e9ecef', padding: '8px 15px', borderRadius: '4px', border: '1px solid #ced4da', color: '#d9534f', fontWeight: 'bold' }}>
+          <span style={{ width: '90px', fontWeight: 'bold', textAlign: 'center' }}>전체 평균</span>
+          <div style={{ flex: 1, backgroundColor: '#e9ecef', padding: '8px 12px', borderRadius: '4px', border: '1px solid #ced4da', color: '#d9534f', fontWeight: 'bold' }}>
             {averageUsage === null ? '데이터 없음' : `${averageUsage.toLocaleString()} kWh`}
+          </div>
+        </div>
+        {/* 🌟 이번 달 예상 리워드 패널 신설 */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{ width: '110px', fontWeight: 'bold', textAlign: 'center', color: '#1f8f4d' }}>이번달 예상 리워드</span>
+          <div style={{ flex: 1, backgroundColor: '#e6f4ea', padding: '8px 12px', borderRadius: '4px', border: '1px solid #a3cfbb', color: '#137333', fontWeight: 'bold', textAlign: 'center' }}>
+            {estimatedRewardInfo.reward} <span style={{ fontSize: '11px', color: '#555', fontWeight: 'normal' }}>(상위 {estimatedRewardInfo.percentile}%)</span>
           </div>
         </div>
       </div>

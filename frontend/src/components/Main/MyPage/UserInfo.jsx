@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const memberTable = [
   { userId: 2, email: 'soung6076@naver.com', nickname: '김성진', kepcoCustNo: '0000000000', householdCount: 1, energyTemp: 36.5, currentPoint: 0, totalPoint: 0, titleId: 1, householdType: 'HEAVY' },
@@ -28,7 +29,6 @@ const titleLabels = {
 };
 
 const storageKey = (userId) => `wattmate-user-profile-${userId || 'guest'}`;
-
 const getHouseholdCountLabel = (count) => `${count}인 가구`;
 
 const getCurrentMember = () => {
@@ -45,13 +45,9 @@ const getCurrentMember = () => {
   }
 
   const matchedMember = memberTable.find((member) => member.userId === userId);
-
-  if (matchedMember) {
-    return matchedMember;
-  }
+  if (matchedMember) return matchedMember;
 
   const matchedByNickname = memberTable.find((member) => member.nickname === nickname);
-
   return matchedByNickname || memberTable[0];
 };
 
@@ -61,10 +57,44 @@ const UserInfo = () => {
   const [editForm, setEditForm] = useState(getCurrentMember);
   const [saveMessage, setSaveMessage] = useState('');
 
+  // 🌟 [핵심 신설] 마이페이지 진입 시 진짜 AWS RDS 데이터베이스에서 내 최신 포인트 총액 긁어오기
   useEffect(() => {
-    const currentMember = getCurrentMember();
-    setUserData(currentMember);
-    setEditForm(currentMember);
+    const fetchRealTimeDBPoints = async () => {
+      const token = localStorage.getItem('accessToken');
+      const myId = Number(localStorage.getItem('userId'));
+
+      if (!token || !myId) return;
+
+      try {
+        const response = await axios.get('http://43.201.202.195:8080/api/users', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        // 전체 유저 중 내 아이디와 일치하는 레코드 탐색
+        const matchedUser = response.data.find(u => Number(u.userId ?? u.user_id) === myId);
+        
+        if (matchedUser) {
+          setUserData(prev => ({
+            ...prev,
+            currentPoint: matchedUser.currentPoint ?? matchedUser.current_point ?? 2000, // 성진님 기획 가입축하 2000 기본 방어
+            totalPoint: matchedUser.totalPoint ?? matchedUser.total_point ?? 2000,
+            nickname: matchedUser.nickname ?? prev.nickname,
+            email: matchedUser.email ?? prev.email
+          }));
+          setEditForm(prev => ({
+            ...prev,
+            currentPoint: matchedUser.currentPoint ?? matchedUser.current_point ?? 2000,
+            totalPoint: matchedUser.totalPoint ?? matchedUser.total_point ?? 2000,
+            nickname: matchedUser.nickname ?? prev.nickname,
+            email: matchedUser.email ?? prev.email
+          }));
+        }
+      } catch (error) {
+        console.error("마이페이지 실시간 DB 포인트 연동 실패:", error);
+      }
+    };
+
+    fetchRealTimeDBPoints();
   }, []);
 
   const handleEditClick = () => {
@@ -88,7 +118,7 @@ const UserInfo = () => {
   };
 
   const handleSaveProfile = (event) => {
-    event.preventDefault();
+    preventDefault();
 
     const nextUserData = {
       ...userData,
@@ -243,16 +273,17 @@ const UserInfo = () => {
             <div className="card" style={{ background: '#fff', padding: '30px', borderRadius: '15px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
               <h3 style={{ marginBottom: '20px', fontSize: '20px' }}>리워드 및 활동 내역</h3>
 
+              {/* 🌟 [수정] 성진님의 메인 화폐 단위인 WP(Watt Point) 로 화려하게 치환 출력 */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0' }}>
                 <span style={{ color: '#666' }}>현재 포인트</span>
                 <span style={{ color: '#4CAF50', fontSize: '32px', fontWeight: 'bold' }}>
-                  {userData.currentPoint.toLocaleString()} P
+                  {Number(userData.currentPoint).toLocaleString()} WP
                 </span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 0', borderTop: '1px solid #f9f9f9' }}>
                 <span style={{ color: '#666' }}>누적 포인트</span>
-                <span style={{ fontWeight: '600' }}>{userData.totalPoint.toLocaleString()} P</span>
+                <span style={{ fontWeight: '600' }}>{Number(userData.totalPoint).toLocaleString()} WP</span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 0' }}>

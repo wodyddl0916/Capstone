@@ -11,8 +11,9 @@ import GoalSetting from "../components/Main/MyPage/GoalSetting";
 import UserInfo from "../components/Main/MyPage/UserInfo";
 
 import RegionalLeague from "../components/Main/LeagueStats/RegionalLeague";
-import SavingRank from "../components/Main/LeagueStats/SavingRank";
-import RewardRanking from "../components/Main/LeagueStats/RewardRanking";
+
+// 포인트 상점 컴포넌트 임포트
+import PointStore from "../components/Main/PointStore/PointStore";
 
 import "../css/Main.css";
 
@@ -20,16 +21,19 @@ const Main = ({ onNavigate }) => {
   const [activeMenu, setActiveMenu] = useState('HOME');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const topMenus = ['HOME', '전기사용량', '리그통계', '마이페이지'];
+  // 🌟 [순서 고정] 상단 클릭 메뉴 순서: 마이페이지를 맨 끝(오른쪽)으로!
+  const topMenus = ['HOME', '전기사용량', '리그통계', '포인트상점', '마이페이지'];
 
+  // 🌟 [순서 고정] 하단 드롭다운 섹션 순서: 상단과 1:1로 정확하게 매칭!
   const subMenus = [
     { title: 'HOME', items: [''] },
     { title: '전기사용량', items: ['시간대별', '일별', '월별'] },
-    { title: '리그통계', items: ['지역 리그', '절약 순위', '리워드 랭킹'] },
+    { title: '리그통계', items: ['지역 리그 순위',] },
+    { title: '포인트상점', items: ['상품 구매'] },
     { title: '마이페이지', items: ['회원정보', '목표 설정', '전력 데이터 업로드'] }
   ];
 
-  // 전기사용량 하위 메뉴에 맞게 개별 컴포넌트 렌더링
+  // 메뉴에 맞게 개별 컴포넌트 렌더링
   const renderContent = () => {
     switch (activeMenu) {
       case 'HOME': return <Home />;
@@ -37,9 +41,9 @@ const Main = ({ onNavigate }) => {
       case '시간대별': return <HourlyStats />;
       case '일별': return <DailyStats />;
       case '월별': return <MonthlyStats />;
-      case '리그통계': case '지역 리그': return <RegionalLeague />;
-      case '절약 순위': return <SavingRank />;
-      case '리워드 랭킹': return <RewardRanking />;
+      case '리그통계': case '지역 리그 순위': return <RegionalLeague />;
+      case '포인트상점':
+      case '상품 구매': return <PointStore />;
       case '마이페이지': case '회원정보': return <UserInfo />;
       case '목표 설정': return <GoalSetting />;
       case '전력 데이터 업로드': return <DataUpload />;
@@ -50,7 +54,11 @@ const Main = ({ onNavigate }) => {
   // 메뉴 클릭 시 특정 메뉴로 리다이렉트하는 핸들러
   const handleMenuClick = (menuName) => {
     if (menuName === '전기사용량') {
-      setActiveMenu('시간대별'); // 전기사용량 클릭 시 시간대별로 기본 설정
+      setActiveMenu('시간대별');
+    } else if (menuName === '포인트상점') {
+      setActiveMenu('상품 구매');
+    } else if (menuName === '마이페이지') {
+      setActiveMenu('회원정보'); // 마이페이지 클릭 시 회원정보 탭을 기본값으로 세팅
     } else {
       setActiveMenu(menuName);
     }
@@ -64,17 +72,20 @@ const Main = ({ onNavigate }) => {
           <span>와트메이트</span>
         </div>
         
+        {/* 메뉴와 드롭다운을 묶어주는 메인 컨테이너 */}
         <div 
           className="nav-menu-container"
           onMouseEnter={() => setIsDropdownOpen(true)}
           onMouseLeave={() => setIsDropdownOpen(false)}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}
         >
-          <div className="nav-menu">
+          {/* 🌟 [배너 정렬] 상단 내비게이션 바 배너 메뉴 렌더링 */}
+          <div className="nav-menu" style={{ display: 'flex', gap: '20px' }}>
             {topMenus.map((menu) => {
-              // 메인 메뉴 활성화 조건
               const isMainActive = activeMenu === menu || 
-                (menu === '전기사용량' && ['시간대별', '일별', '월별', '연도별'].includes(activeMenu)) ||
+                (menu === '전기사용량' && ['시간대별', '일별', '월별'].includes(activeMenu)) ||
                 (menu === '리그통계' && ['지역 리그', '절약 순위', '리워드 랭킹'].includes(activeMenu)) ||
+                (menu === '포인트상점' && ['상품 구매'].includes(activeMenu)) ||
                 (menu === '마이페이지' && ['회원정보', '목표 설정', '전력 데이터 업로드'].includes(activeMenu));
 
               return (
@@ -82,6 +93,7 @@ const Main = ({ onNavigate }) => {
                   key={menu}
                   className={`menu-item ${isMainActive ? 'active' : ''}`}
                   onClick={() => handleMenuClick(menu)}
+                  style={{ cursor: 'pointer', padding: '10px 15px', fontWeight: 'bold' }}
                 >
                   {menu}
                 </div>
@@ -89,26 +101,26 @@ const Main = ({ onNavigate }) => {
             })}
           </div>
 
-          {/* 드롭다운 영역 */}
-          <div className={`mega-dropdown ${isDropdownOpen ? 'show' : ''}`}>
-            <div className="dropdown-container">
+          {/* 🌟 [드롭다운 정렬] 상단 메뉴와 열 크기를 완벽하게 5칸(20%씩)으로 쪼갠 메가 드롭다운 */}
+          <div className={`mega-dropdown ${isDropdownOpen ? 'show' : ''}`} style={{ width: '100%' }}>
+            <div className="dropdown-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', width: '100%' }}>
               {subMenus.map((menu, index) => {
-                // 해당 섹션(열)이 활성화되었는지 확인
                 const isSectionActive = activeMenu === menu.title || menu.items.includes(activeMenu);
 
                 return (
-                  <div key={index} className={`dropdown-section ${isSectionActive ? 'active-column' : ''}`}>
-                    <h4 onClick={() => {
+                  <div key={index} className={`dropdown-section ${isSectionActive ? 'active-column' : ''}`} style={{ textAlign: 'center' }}>
+                    <h4 style={{ cursor: 'pointer', margin: '10px 0', fontSize: '15px', fontWeight: 'bold' }} onClick={() => {
                       handleMenuClick(menu.title);
                       setIsDropdownOpen(false);
                     }}>
                       {menu.title}
                     </h4>
-                    <ul>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                       {menu.items.map((item, idx) => (
                         <li 
                           key={idx} 
                           className={activeMenu === item ? 'active-text' : ''}
+                          style={{ padding: '5px 0', cursor: 'pointer', fontSize: '13px' }}
                           onClick={() => {
                             handleMenuClick(item);
                             setIsDropdownOpen(false);
