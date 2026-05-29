@@ -6,21 +6,6 @@ const lightGray = '#f8f9fa';
 const borderColor = '#dee2e6';
 const API_BASE_URL = 'http://43.201.202.195:8080';
 
-const leagueUsers = [
-  { userId: 2, nickname: '김성진' },
-  { userId: 8, nickname: '이건양' },
-  { userId: 9, nickname: '김성준' },
-  { userId: 10, nickname: '박재용' },
-  { userId: 11, nickname: '건양' },
-  { userId: 12, nickname: 'user9' },
-  { userId: 13, nickname: '날렵한또치' },
-  { userId: 14, nickname: 'user13' },
-  { userId: 15, nickname: 'user18' },
-  { userId: 16, nickname: 'user10' },
-  { userId: 17, nickname: 'user11' },
-  { userId: 18, nickname: 'user12' },
-];
-
 const monthOptions = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 const yearOptions = ['2024', '2025', '2026'];
 
@@ -74,6 +59,7 @@ const RegionalLeague = () => {
   const currentUserId = Number(localStorage.getItem('userId'));
   const previousPeriod = getPreviousPeriod(selectedYear, selectedMonth);
 
+  // 내 순위 정보 동적 연산
   const myRankInfo = useMemo(() => {
     const myRow = rankingList.find((item) => item.userId === currentUserId);
 
@@ -92,6 +78,7 @@ const RegionalLeague = () => {
     };
   }, [currentUserId, rankingList]);
 
+  // 리그 전체 평균 전력 소모량 연산
   const averageUsage = useMemo(() => {
     const validUsages = rankingList
       .map((item) => item.usage)
@@ -103,18 +90,49 @@ const RegionalLeague = () => {
     return Number((totalUsage / validUsages.length).toFixed(2));
   }, [rankingList]);
 
+  // 🌟 [보안 및 연동 완료] JWT 토큰 인증 헤더를 포함한 실시간 전체 랭킹 취합 파이프라인
   const fetchMonthlyRanking = async () => {
     setLoading(true);
     setErrorMessage('');
 
     try {
+      // 1. 로그인 성공 시 브라우저 내부(localStorage)에 세션 저장해둔 진짜 JWT 토큰 획득
+      const token = localStorage.getItem('accessToken');
+
+      if (!token) {
+        setErrorMessage('로그인 정보가 없거나 세션이 만료되었습니다. 다시 로그인해 주세요.');
+        setLoading(false);
+        return;
+      }
+
+      // 2. 🔑 Axios 요청 헤더에 Authorization Bearer 토큰 서명을 탑재하여 백엔드 403 인증 철벽 돌파
+      const usersResponse = await axios.get(`${API_BASE_URL}/api/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const dbUsers = usersResponse.data;
+
+      if (!dbUsers || dbUsers.length === 0) {
+        setRankingList([]);
+        return;
+      }
+
+      // 3. 받아온 실시간 유저 리스트를 기반으로 각 유저의 전력 데이터 순회 매핑
       const rows = await Promise.all(
-        leagueUsers.map(async (user) => {
+        dbUsers.map(async (user) => {
+          const uId = user.userId ?? user.user_id;
+          const nick = user.nickname ?? '알 수 없는 사용자';
+
           try {
+            // 개별 전력 통계 데이터 요청 시에도 똑같이 보안 인증 헤더(Headers)를 적용합니다.
             const response = await axios.get(`${API_BASE_URL}/api/power/monthly`, {
               params: {
-                userId: user.userId,
+                userId: uId,
                 year: Number(selectedYear)
+              },
+              headers: {
+                Authorization: `Bearer ${token}`
               }
             });
 
@@ -122,8 +140,11 @@ const RegionalLeague = () => {
               ? response
               : await axios.get(`${API_BASE_URL}/api/power/monthly`, {
                 params: {
-                  userId: user.userId,
+                  userId: uId,
                   year: previousPeriod.year
+                },
+                headers: {
+                  Authorization: `Bearer ${token}`
                 }
               });
 
@@ -141,15 +162,17 @@ const RegionalLeague = () => {
               : null;
 
             return {
-              ...user,
+              userId: uId,
+              nickname: nick,
               usage,
               previousUsage,
               saving
             };
           } catch (error) {
-            console.error(`${user.nickname} 월별 전력 사용량 로드 실패:`, error);
+            console.error(`${nick} 월별 데이터 조회 실패:`, error);
             return {
-              ...user,
+              userId: uId,
+              nickname: nick,
               usage: null,
               previousUsage: null,
               saving: null
@@ -158,6 +181,7 @@ const RegionalLeague = () => {
         })
       );
 
+      // 4. 절약 수치(saving) 기준으로 내림차순 정렬하여 동적 순위 부여
       const sortedRows = rows
         .sort((a, b) => {
           if (a.saving === null) return 1;
@@ -171,9 +195,9 @@ const RegionalLeague = () => {
 
       setRankingList(sortedRows);
     } catch (error) {
-      console.error('월별 지역 리그 데이터를 불러오는데 실패했습니다:', error);
+      console.error('월별 DB 리그 데이터 분석 실패:', error);
       setRankingList([]);
-      setErrorMessage('월별 사용자 순위를 만들지 못했습니다.');
+      setErrorMessage('인증에 실패했거나 데이터를 불러오지 못했습니다.');
     } finally {
       setLoading(false);
     }
