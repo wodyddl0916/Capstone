@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const API_BASE_URL = 'http://43.201.202.195:8080';
 
-const householdTypeLabels = { HEAVY: '다사용 가구', MIDDLE: '일반 가구', LIGHT: '절약 가구' };
 const titleLabels = { 1: '일반 회원', 2: '우수 회원', 3: '절약 리더' };
 
 const UserInfo = () => {
@@ -139,8 +138,12 @@ const UserInfo = () => {
     const myId = userData.userId;
 
     const updateBody = {
-      userId: myId, email: editForm.email.trim(), nickname: editForm.nickname.trim(),
-      kepcoCustNo: editForm.kepcoCustNo.trim(), householdCount: editForm.householdCount, householdType: editForm.householdType
+      userId: myId, 
+      email: editForm.email.trim(), 
+      nickname: editForm.nickname.trim(),
+      kepcoCustNo: userData.kepcoCustNo, // 고정값 유지
+      householdCount: editForm.householdCount, 
+      householdType: userData.householdType // 고정값 유지
     };
 
     try {
@@ -173,7 +176,7 @@ const UserInfo = () => {
         </div>
 
         <div className="mypage-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '30px', textAlign: 'left' }}>
-          {/* 좌측 내 정보 패널 */}
+          {/* 좌측 내 정보 패널 (이메일, 가구원수 집중 커스텀) */}
           <div className="card" style={{ background: '#fff', padding: '30px', borderRadius: '15px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
             <h3 style={{ marginBottom: '25px', fontSize: '20px' }}>내 기본 정보</h3>
             <div className="profile-section" style={{ textAlign: 'center', marginBottom: '30px' }}>
@@ -186,9 +189,8 @@ const UserInfo = () => {
 
             {isEditing ? (
               <form onSubmit={handleSaveProfile}>
-                <div style={{ marginBottom: '16px' }}><label style={labelStyle}>닉네임</label><input name="nickname" value={editForm.nickname || ''} onChange={handleEditChange} style={inputStyle} /></div>
                 <div style={{ marginBottom: '16px' }}><label style={labelStyle}>이메일</label><input name="email" value={editForm.email || ''} onChange={handleEditChange} style={inputStyle} /></div>
-                <div style={{ marginBottom: '16px' }}><label style={labelStyle}>한전 고객번호</label><input name="kepcoCustNo" value={editForm.kepcoCustNo || ''} onChange={handleEditChange} style={inputStyle} /></div>
+                <div style={{ marginBottom: '16px' }}><label style={labelStyle}>가구원 수</label><input type="number" min="1" name="householdCount" value={editForm.householdCount || 1} onChange={handleEditChange} style={inputStyle} /></div>
                 <div style={{ display: 'flex', gap: '10px', marginTop: '25px' }}>
                   <button type="button" onClick={() => setIsEditing(false)} style={{ flex: 1, padding: '12px', background: '#eef1f0', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>취소</button>
                   <button type="submit" style={{ flex: 1, padding: '12px', background: '#B4C6B6', border: 'none', borderRadius: '8px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>저장하기</button>
@@ -196,11 +198,8 @@ const UserInfo = () => {
               </form>
             ) : (
               <>
-                <div style={infoRowStyle}><span style={{ color: '#666' }}>회원번호</span><span style={{ fontWeight: '600' }}>{userData.userId}</span></div>
                 <div style={infoRowStyle}><span style={{ color: '#666' }}>이메일</span><span style={{ fontWeight: '600' }}>{userData.email}</span></div>
-                <div style={infoRowStyle}><span style={{ color: '#666' }}>한전 고객번호</span><span style={{ fontWeight: '600' }}>{userData.kepcoCustNo || '0000000000'}</span></div>
                 <div style={infoRowStyle}><span style={{ color: '#666' }}>가구원 수</span><span style={{ fontWeight: '600' }}>{userData.householdCount}인 가구</span></div>
-                <div style={infoRowStyle}><span style={{ color: '#666' }}>가구 유형</span><span style={{ fontWeight: '600' }}>{householdTypeLabels[userData.householdType] || '일반 가구'}</span></div>
                 {saveMessage && <div style={{ marginTop: '18px', padding: '10px 12px', borderRadius: '8px', background: '#f0f7f2', color: '#4f7355', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>{saveMessage}</div>}
                 <button onClick={handleEditClick} style={{ width: '100%', marginTop: '25px', padding: '12px', background: '#B4C6B6', border: 'none', borderRadius: '8px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>내 정보 수정하기</button>
               </>
