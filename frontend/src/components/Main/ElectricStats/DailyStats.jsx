@@ -23,7 +23,7 @@ const DailyStats = () => {
     setLoading(true);
     try {
       // 🌟 [통신 경로 명확화] AWS 백엔드 주소 지정
-      const response = await axios.get(`http://43.201.202.195:8080/api/power/daily`, {
+      const response = await axios.get('/api/power/daily', {
         params: { userId: parseInt(userId, 10), month: parseInt(selectedMonth), year: parseInt(selectedYear) }
       });
       

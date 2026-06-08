@@ -159,7 +159,7 @@ const Home = () => {
           const authHeaders = { headers: { Authorization: `Bearer ${token}` } };
 
           // [A] 2026년 5월 가구 총 전력 실적 데이터 수집
-          const powerRes = await axios.get('http://43.201.202.195:8080/api/power/monthly', {
+          const powerRes = await axios.get('/api/power/monthly', {
             params: { userId: parseInt(userId, 10), year: SUMMARY_YEAR }
           });
           const monthData = powerRes.data.find((item) => Number(item.month) === SUMMARY_MONTH);
@@ -168,7 +168,7 @@ const Home = () => {
           }
 
           // [B] 🌟 [요청 반영 3] 마이페이지와 완벽 결속되는 내 실제 계정의 실시간 남은 포인트 연동
-          const userRes = await axios.get('http://43.201.202.195:8080/api/users', authHeaders);
+          const userRes = await axios.get('/api/users', authHeaders);
           const matchedUser = userRes.data.find(u => Number(u.userId ?? u.user_id) === Number(userId));
           if (matchedUser) {
             myCurrentPoint = matchedUser.currentPoint ?? matchedUser.current_point ?? 0;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://43.201.202.195:8080';
+const API_BASE_URL = '';
 
 const titleLabels = { 1: '일반 회원', 2: '우수 회원', 3: '절약 리더' };
 

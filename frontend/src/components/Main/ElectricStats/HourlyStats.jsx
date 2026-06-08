@@ -35,7 +35,7 @@ const HourlyStats = () => {
     setLoading(true);
     try {
       // 🌟 [통신 경로 안정화] AWS 주소 직격타 및 동적 파라미터 셋업
-      const baseUrl = "http://43.201.202.195:8080/api/power/hourly";
+      const baseUrl = "/api/power/hourly";
       const urls = [
         `${baseUrl}?userId=${userId}&date=${targetDate}`,
         `${baseUrl}?userId=${userId}&date=${getOffsetDate(targetDate, -1)}`,

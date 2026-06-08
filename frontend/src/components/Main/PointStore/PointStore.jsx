@@ -4,7 +4,7 @@ import axios from 'axios';
 const primaryBlue = '#1f4e79';
 const lightGray = '#f8f9fa';
 const borderColor = '#dee2e6';
-const API_BASE_URL = 'http://43.201.202.195:8080';
+const API_BASE_URL = '';
 
 const PointStore = () => {
   const [products, setProducts] = useState([]);

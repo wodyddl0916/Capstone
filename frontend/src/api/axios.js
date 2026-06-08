@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// 1. 환경변수에서 백엔드 주소 가져오기
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// Vercel 배포에서는 /api rewrites를 통해 백엔드로 프록시한다.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 const api = axios.create({
   baseURL: API_BASE_URL, 

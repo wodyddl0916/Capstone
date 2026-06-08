@@ -22,7 +22,7 @@ const MonthlyStats = () => {
     setLoading(true);
     try {
       // 🌟 [통신 경로 안정화] AWS 직격 주소 적용
-      const response = await axios.get(`http://43.201.202.195:8080/api/power/monthly`, { 
+      const response = await axios.get('/api/power/monthly', { 
         params: { userId: parseInt(userId, 10), year: parseInt(year) } 
       });
       

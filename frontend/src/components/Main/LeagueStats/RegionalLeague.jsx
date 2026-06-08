@@ -4,7 +4,7 @@ import axios from 'axios';
 const primaryBlue = '#1f4e79';
 const lightGray = '#f8f9fa';
 const borderColor = '#dee2e6';
-const API_BASE_URL = 'http://43.201.202.195:8080';
+const API_BASE_URL = '';
 
 const monthOptions = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 const yearOptions = ['2024', '2025', '2026'];

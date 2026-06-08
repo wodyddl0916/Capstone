@@ -28,7 +28,7 @@ const ElectricBillPage = ({ view = 'estimate' }) => {
 
       try {
         // [A] 백엔드에서 해당 연도의 모든 월별 데이터 일괄 수집
-        const response = await axios.get('http://43.201.202.195:8080/api/power/monthly', {
+        const response = await axios.get('/api/power/monthly', {
           params: {
             userId: parseInt(userId, 10),
             year: SUMMARY_YEAR,

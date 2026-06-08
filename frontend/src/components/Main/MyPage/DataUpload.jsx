@@ -36,7 +36,7 @@ const DataUpload = () => {
 
     try {
       // [통신 경로 안정화] AWS 백엔드 실서버 업로드 API 다이렉트 타격
-      const response = await axios.post('http://43.201.202.195:8080/api/power/upload', formData, {
+      const response = await axios.post('/api/power/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
