@@ -104,11 +104,11 @@ const PointStore = () => {
 
   return (
     <div style={{ padding: '30px', backgroundColor: 'white', minHeight: '100vh', color: '#333', fontFamily: 'Malgun Gothic, sans-serif' }}>
-      <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#222', marginBottom: '10px' }}>포인트 상점</h2>
+      <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#222', marginBottom: '10px' }}>상품 구매</h2>
       <div style={{ fontSize: '13px', color: '#666', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '15px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-        <span>리워드</span>
+        <span>포인트 상점</span>
         <span style={{ margin: '0 5px', color: '#ccc' }}>&gt;</span>
-        <strong style={{ color: primaryBlue }}>포인트 상점</strong>
+        <strong style={{ color: primaryBlue }}>상품 구매</strong>
       </div>
 
       <div style={{

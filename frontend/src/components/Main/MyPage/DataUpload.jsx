@@ -3,9 +3,6 @@ import axios from 'axios';
 import ElectricStats from '../ElectricStats'; 
 
 const DataUpload = () => {
-  // 탭 상태 관리 ('계약정보', '요금정보', '사용량정보')
-  const [activeTab, setActiveTab] = useState('사용량정보');
-
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
@@ -60,21 +57,6 @@ const DataUpload = () => {
     container: { maxWidth: '1100px', margin: '0 auto', fontFamily: '"Malgun Gothic", sans-serif', padding: '20px', color: '#333' },
     headerTitle: { fontSize: '28px', fontWeight: 'bold', marginBottom: '10px' },
     breadcrumb: { fontSize: '13px', color: '#666', marginBottom: '20px', display: 'flex', alignItems: 'center' },
-    tabContainer: { display: 'flex', borderBottom: '2px solid #1a5c96', marginBottom: '25px', paddingLeft: '0', listStyle: 'none' },
-    tabItem: (isActive) => ({
-      padding: '12px 30px',
-      cursor: 'pointer',
-      fontSize: '15px',
-      fontWeight: 'bold',
-      border: '1px solid #ddd',
-      borderBottom: isActive ? 'none' : '1px solid #ddd',
-      backgroundColor: isActive ? '#1a5c96' : '#f8f9fa',
-      color: isActive ? '#fff' : '#555',
-      marginRight: '4px',
-      borderTopLeftRadius: '4px',
-      borderTopRightRadius: '4px',
-      transition: 'all 0.2s ease'
-    }),
     uploadSection: { padding: '40px 30px', border: '1px solid #ddd', backgroundColor: '#fff', textAlign: 'center', borderRadius: '6px' },
     uploadBtn: { padding: '10px 25px', backgroundColor: '#1a5c96', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold', fontSize: '15px', marginLeft: '10px', borderRadius: '4px' },
     fileInputLabel: { padding: '9px 20px', backgroundColor: '#fff', border: '1px solid #1a5c96', color: '#1a5c96', cursor: 'pointer', fontWeight: 'bold', fontSize: '15px', borderRadius: '4px' },
@@ -85,33 +67,10 @@ const DataUpload = () => {
       {/* 1. 상단 타이틀 및 경로 */}
       <h2 style={styles.headerTitle}>전력 데이터 업로드</h2>
       <div style={styles.breadcrumb}>
-        <span>🏠 마이페이지 &gt; <strong>전력 데이터 업로드</strong></span>
+        <span>마이페이지 &gt; <strong>전력 데이터 업로드</strong></span>
       </div>
 
-      {/* 2. 탭 내비게이션 바 */}
-      <div style={styles.tabContainer}>
-        <div style={styles.tabItem(activeTab === '계약정보')} onClick={() => setActiveTab('계약정보')}>계약 정보</div>
-        <div style={styles.tabItem(activeTab === '요금정보')} onClick={() => setActiveTab('요금정보')}>요금 정보 내역</div>
-        <div style={styles.tabItem(activeTab === '사용량정보')} onClick={() => setActiveTab('사용량정보')}>사용량 정보 분석</div>
-      </div>
-
-      {/* [계약정보 탭] */}
-      {activeTab === '계약정보' && (
-        <div style={{ padding: '50px', textAlign: 'center', color: '#666', border: '1px solid #ddd', backgroundColor: '#fff', borderRadius: '6px' }}>
-          고객 번호와 연동된 한전 기본 계약 정보가 존재하지 않습니다.
-        </div>
-      )}
-
-      {/* [요금정보 탭] */}
-      {activeTab === '요금정보' && (
-        <div style={{ padding: '50px', textAlign: 'center', color: '#666', border: '1px solid #ddd', backgroundColor: '#fff', borderRadius: '6px' }}>
-          요금 정보 정산서 내역이 아직 존재하지 않습니다.
-        </div>
-      )}
-
-      {/* [사용량정보 탭] */}
-      {activeTab === '사용량정보' && (
-        <div>
+      <div>
           <h3 style={{ fontSize: '18px', marginBottom: '15px', color: '#1a5c96' }}>■ 전력 데이터 분석 및 자산화</h3>
           <div style={styles.uploadSection}>
             <p style={{ color: '#666', marginBottom: '25px', fontSize: '14px' }}>
@@ -166,7 +125,6 @@ const DataUpload = () => {
             </div>
           )}
         </div>
-      )}
     </div>
   );
 };

@@ -227,7 +227,7 @@ const RegionalLeague = () => {
 
   return (
     <div style={{ padding: '30px', backgroundColor: 'white', minHeight: '100vh', color: '#333', fontFamily: 'Malgun Gothic, dotum, sans-serif' }}>
-      <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#222', marginBottom: '10px' }}>지역 리그</h2>
+      <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#222', marginBottom: '10px' }}>지역 리그 순위</h2>
       <div style={{
         fontSize: '13px',
         color: '#666',
@@ -240,7 +240,7 @@ const RegionalLeague = () => {
       }}>
         <span>리그통계</span>
         <span style={{ margin: '0 5px', color: '#ccc' }}>&gt;</span>
-        <strong style={{ color: primaryBlue }}>지역 리그</strong>
+        <strong style={{ color: primaryBlue }}>지역 리그 순위</strong>
       </div>
 
       {/* 🌟 [수정] 성진님 기획에 따른 4칸짜리 종합 모니터링 대시보드 */}
@@ -274,7 +274,11 @@ const RegionalLeague = () => {
         </div>
         {/* 🌟 이번 달 예상 리워드 패널 신설 */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ width: '110px', fontWeight: 'bold', textAlign: 'center', color: '#1f8f4d' }}>이번달 예상 리워드</span>
+          <span style={{ width: '110px', fontWeight: 'bold', textAlign: 'center', color: '#1f8f4d', lineHeight: 1.35 }}>
+            이번달 예상
+            <br />
+            리워드
+          </span>
           <div style={{ flex: 1, backgroundColor: '#e6f4ea', padding: '8px 12px', borderRadius: '4px', border: '1px solid #a3cfbb', color: '#137333', fontWeight: 'bold', textAlign: 'center' }}>
             {estimatedRewardInfo.reward} <span style={{ fontSize: '11px', color: '#555', fontWeight: 'normal' }}>(상위 {estimatedRewardInfo.percentile}%)</span>
           </div>

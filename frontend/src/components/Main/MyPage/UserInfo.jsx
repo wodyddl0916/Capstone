@@ -161,7 +161,7 @@ const UserInfo = () => {
 
   const inputStyle = { width: '100%', height: '42px', border: '1px solid #d9dee7', borderRadius: '8px', padding: '0 12px', color: '#333', background: '#fff' };
   const labelStyle = { display: 'block', color: '#666', fontSize: '14px', fontWeight: '600', marginBottom: '8px' };
-  const infoRowStyle = { display: 'flex', justifyContent: 'space-between', gap: '20px', padding: '15px 0', borderBottom: '1px solid #f1f3f5' };
+  const infoRowStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px', padding: '13px 0', borderBottom: '1px solid #f1f3f5' };
 
   if (loading) {
     return <div style={{ textAlign: 'center', padding: '100px', fontWeight: 'bold', color: '#1f4e79' }}>데이터베이스 동기화 중...</div>;
@@ -170,17 +170,17 @@ const UserInfo = () => {
   return (
     <div className="empty-page" style={{ paddingTop: '40px' }}>
       <div className="container">
-        <div className="page-title" style={{ textAlign: 'left', marginBottom: '30px', fontSize: '28px', fontWeight: 'bold' }}>마이페이지</div>
+        <div className="page-title" style={{ textAlign: 'left', marginBottom: '30px', fontSize: '28px', fontWeight: 'bold' }}>회원정보</div>
         <div style={{ fontSize: '13px', color: '#666', marginBottom: '30px', display: 'flex', alignItems: 'center', textAlign: 'left' }}>
           <span>마이페이지 &gt; <strong>회원정보</strong></span>
         </div>
 
-        <div className="mypage-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '30px', textAlign: 'left' }}>
+        <div className="mypage-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '30px', textAlign: 'left', alignItems: 'start' }}>
           {/* 좌측 내 정보 패널 (이메일, 가구원수 집중 커스텀) */}
-          <div className="card" style={{ background: '#fff', padding: '30px', borderRadius: '15px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-            <h3 style={{ marginBottom: '25px', fontSize: '20px' }}>내 기본 정보</h3>
-            <div className="profile-section" style={{ textAlign: 'center', marginBottom: '30px' }}>
-              <div className="profile-img-circle" style={{ width: '100px', height: '100px', background: '#f0f0f0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '46px', margin: '0 auto 15px' }}>
+          <div className="card" style={{ background: '#fff', padding: '26px 30px 28px', borderRadius: '15px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', alignSelf: 'start' }}>
+            <h3 style={{ marginBottom: '22px', fontSize: '20px', textAlign: 'center' }}>내 기본 정보</h3>
+            <div className="profile-section" style={{ textAlign: 'center', marginBottom: '24px' }}>
+              <div className="profile-img-circle" style={{ width: '92px', height: '92px', background: '#f0f0f0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '42px', margin: '0 auto 14px' }}>
                 {String(userData.nickname || '사').slice(0, 1)}
               </div>
               <div className="user-name" style={{ fontSize: '22px', fontWeight: 'bold' }}>{userData.nickname} 님</div>
@@ -201,7 +201,7 @@ const UserInfo = () => {
                 <div style={infoRowStyle}><span style={{ color: '#666' }}>이메일</span><span style={{ fontWeight: '600' }}>{userData.email}</span></div>
                 <div style={infoRowStyle}><span style={{ color: '#666' }}>가구원 수</span><span style={{ fontWeight: '600' }}>{userData.householdCount}인 가구</span></div>
                 {saveMessage && <div style={{ marginTop: '18px', padding: '10px 12px', borderRadius: '8px', background: '#f0f7f2', color: '#4f7355', fontSize: '13px', fontWeight: '700', textAlign: 'center' }}>{saveMessage}</div>}
-                <button onClick={handleEditClick} style={{ width: '100%', marginTop: '25px', padding: '12px', background: '#B4C6B6', border: 'none', borderRadius: '8px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>내 정보 수정하기</button>
+                <button onClick={handleEditClick} style={{ width: '100%', marginTop: '22px', padding: '12px', background: '#B4C6B6', border: 'none', borderRadius: '8px', color: '#fff', fontWeight: 'bold', cursor: 'pointer' }}>내 정보 수정하기</button>
               </>
             )}
           </div>

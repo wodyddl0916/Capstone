@@ -32,6 +32,8 @@
   grid-template-columns: 1fr 1.1fr;
   gap: 34px;
   align-items: center;
+  transform: scale(0.9);
+  transform-origin: center;
 }
 
 .signupform-left {

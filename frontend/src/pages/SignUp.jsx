@@ -64,7 +64,7 @@ export default function SignUp({ onNavigate }) {
           <div className="signup-info-box">
             <div className="signup-info-title">회원가입 후 입력하는 정보</div>
             <div className="signup-info-text">
-              · 이름 / 이메일 / 휴대폰 번호
+              · 이름 / 이메일 / 한전 고객번호
               <br />
               · 거주 지역 정보
               <br />

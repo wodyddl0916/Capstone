@@ -5,7 +5,6 @@ import HourlyStats from '../components/Main/ElectricStats/HourlyStats';
 import DailyStats from '../components/Main/ElectricStats/DailyStats';
 import MonthlyStats from '../components/Main/ElectricStats/MonthlyStats';
 import DataUpload from "../components/Main/MyPage/DataUpload";
-//import GoalSetting from "../components/Main/MyPage/GoalSetting";
 import UserInfo from "../components/Main/MyPage/UserInfo";
 import RegionalLeague from "../components/Main/LeagueStats/RegionalLeague";
 import ElectricBillPage from "../components/Main/ElectricBillPage";
@@ -21,7 +20,7 @@ const Main = ({ onNavigate }) => {
   const subMenus = [
     { title: 'HOME', items: [''] },
     { title: '전기사용량', items: ['시간대별', '일별', '월별'] },
-    { title: '전기요금', items: ['전기요금표', '이번달 전기요금 예측'] },
+    { title: '전기요금', items: ['전기요금표'] },
     { title: '리그통계', items: ['지역 리그 순위'] },
     { title: '포인트상점', items: ['상품 구매'] },
     { title: '마이페이지', items: ['회원정보', '전력 데이터 업로드'] }
@@ -36,7 +35,6 @@ const Main = ({ onNavigate }) => {
       case '월별': return <MonthlyStats />;
       case '전기요금':
       case '전기요금표': return <ElectricBillPage view="tariff" />;
-      case '이번달 전기요금 예측': return <ElectricBillPage view="estimate" />;
       case '리그통계': case '지역 리그 순위': return <RegionalLeague />;
       case '포인트상점':
       case '상품 구매': return <PointStore />;
@@ -74,7 +72,7 @@ const Main = ({ onNavigate }) => {
             {topMenus.map((menu) => {
               const isMainActive = activeMenu === menu || 
                 (menu === '전기사용량' && ['시간대별', '일별', '월별'].includes(activeMenu)) ||
-                (menu === '전기요금' && ['전기요금표', '이번달 전기요금 예측'].includes(activeMenu)) ||
+                (menu === '전기요금' && ['전기요금표'].includes(activeMenu)) ||
                 (menu === '리그통계' && ['지역 리그 순위', '지역 리그', '절약 순위', '리워드 랭킹'].includes(activeMenu)) ||
                 (menu === '포인트상점' && ['상품 구매'].includes(activeMenu)) ||
                 (menu === '마이페이지' && ['회원정보', '목표 설정', '전력 데이터 업로드'].includes(activeMenu));
