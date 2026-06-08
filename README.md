@@ -265,9 +265,9 @@ npm run preview
     <th align="center">담당 업무</th>
   </tr>
   <tr>
-    <td align="center">박재용</td>
+    <td align="center">박재용, Infa</td>
     <td align="center">Frontend</td>
-    <td align="center">React 화면 구현, API 연동, 데이터 시각화</td>
+    <td align="center">React 화면 구현, API 연동, 배포 환경 구성 및 운영 관리</td>
   </tr>
   <tr>
     <td align="center">김도형</td>
@@ -281,12 +281,12 @@ npm run preview
   </tr>
   <tr>
     <td align="center">김성준</td>
-    <td align="center">AI, Infra</td>
-    <td align="center">배포 환경 구성 및 운영 관리 및 AI 모델 개발</td>
+    <td align="center">AI</td>
+    <td align="center">전력 데이터 분석 및 예측 로직 모델 구현</td>
   </tr>
     <tr>
-    <th align="center">이건양</th>
-    <th align="center">Frontend</th>
-    <th align="center">React 화면 구현, 데이터 시각화</th>
+    <td align="center">이건양</td>
+    <td align="center">Frontend</td>
+    <td align="center">React 화면 구현, 데이터 시각화</td>
   </tr>
 </table>
