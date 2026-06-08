@@ -265,8 +265,8 @@ npm run preview
     <th align="center">담당 업무</th>
   </tr>
   <tr>
-    <td align="center">박재용, Infa</td>
-    <td align="center">Frontend</td>
+    <td align="center">박재용</td>
+    <td align="center">Frontend, Infra</td>
     <td align="center">React 화면 구현, API 연동, 배포 환경 구성 및 운영 관리</td>
   </tr>
   <tr>
